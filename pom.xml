@@ -32,6 +32,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -75,6 +83,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -112,6 +124,7 @@
                         <password>${env.PGPASSWORD}</password>
                     </jdbc>
                     <generator>
+                        <name>org.jooq.codegen.JavaGenerator</name>
                         <database>
                             <name>org.jooq.meta.postgres.PostgresDatabase</name>
                             <inputSchema>public</inputSchema>
@@ -131,9 +144,15 @@
                             </properties>
                         </database>
                         <target>
-                            <packageName>com.example.otrtesttask.db</packageName>
-                            <directory>src/main/java</directory>
+                            <packageName>com.example.otrtesttask.jooq</packageName>
+                            <directory>target/generated-sources/jooq</directory>
                         </target>
+                        <generate>
+                            <pojos>true</pojos>
+                            <daos>true</daos>
+                            <records>true</records>
+<!--                            <validationAnnotations>true</validationAnnotations>-->
+                        </generate>
                     </generator>
                 </configuration>
             </plugin>
