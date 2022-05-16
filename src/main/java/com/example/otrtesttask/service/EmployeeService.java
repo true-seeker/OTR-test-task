@@ -3,7 +3,9 @@ package com.example.otrtesttask.service;
 import com.example.otrtesttask.dto.EmployeeDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
+import com.example.otrtesttask.jooq.tables.pojos.Task;
 import com.example.otrtesttask.repository.EmployeeRepository;
+import com.example.otrtesttask.repository.TaskRepository;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private TaskRepository taskRepository;
 
     public Employee create(Employee employee) throws CustomApiException {
         if (employee.getBranchId() == null)
@@ -28,12 +32,10 @@ public class EmployeeService {
     }
 
     public List<EmployeeDto> getEmployees(Condition condition) {
-
         return employeeRepository.findAll(condition);
     }
 
     public Employee getEmployee(Integer id) throws CustomApiException {
-
         Employee e = employeeRepository.find(id);
         if (e == null)
             throw new CustomApiException(String.format("Employee with id %d not found", id), HttpStatus.NOT_FOUND);
@@ -41,10 +43,19 @@ public class EmployeeService {
     }
 
     public Boolean delete(Integer id) throws CustomApiException {
-        Boolean b = employeeRepository.delete(id);
-        if (!b)
+        Employee e = employeeRepository.find(id);
+        if (e == null)
             throw new CustomApiException(String.format("Employee with id %d not found", id), HttpStatus.NOT_FOUND);
-        return b;
+
+        List<Employee> subordinates = employeeRepository.findSubordinates(id);
+        if (!subordinates.isEmpty())
+            throw new CustomApiException(String.format("Employee with id %d has subordinates", id), HttpStatus.FORBIDDEN);
+
+        List<Task> taskList = taskRepository.findTasksByEmployeeId(id);
+        if (!taskList.isEmpty())
+            throw new CustomApiException(String.format("Employee with id %d has tasks", id), HttpStatus.FORBIDDEN);
+
+        return employeeRepository.delete(id);
     }
 
     public Employee update(Integer id, Employee employee) throws CustomApiException {
@@ -53,5 +64,6 @@ public class EmployeeService {
             throw new CustomApiException(String.format("Employee with id %d not found", id), HttpStatus.NOT_FOUND);
         return e;
     }
+
 
 }

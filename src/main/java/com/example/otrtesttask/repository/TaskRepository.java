@@ -54,4 +54,10 @@ public class TaskRepository {
                 .where(Tables.TASK.ID.eq(id))
                 .execute() == 1;
     }
+
+    public List<Task> findTasksByEmployeeId(Integer id) {
+        return dsl.selectFrom(Tables.TASK)
+                .where(Tables.TASK.EMPLOYEE_ID.eq(id))
+                .fetchInto(Task.class);
+    }
 }

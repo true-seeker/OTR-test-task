@@ -57,4 +57,10 @@ public class EmployeeRepository {
                 .execute() == 1;
     }
 
+    public List<Employee> findSubordinates(Integer id) {
+        return dsl.selectFrom(Tables.EMPLOYEE)
+                .where(Tables.EMPLOYEE.MANAGER_ID.eq(id))
+                .fetchInto(Employee.class);
+    }
+
 }
