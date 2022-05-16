@@ -148,10 +148,10 @@
                             <directory>target/generated-sources/jooq</directory>
                         </target>
                         <generate>
+                            <springAnnotations>true</springAnnotations>
                             <pojos>true</pojos>
                             <daos>true</daos>
                             <records>true</records>
-<!--                            <validationAnnotations>true</validationAnnotations>-->
                         </generate>
                     </generator>
                 </configuration>

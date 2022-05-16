@@ -1,5 +1,6 @@
 package com.example.otrtesttask.controller;
 
+import com.example.otrtesttask.dto.EmployeeDto;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.service.EmployeeService;
@@ -39,9 +40,9 @@ public class EmployeeController {
         if (fullName != null)
             condition = condition.and(Tables.EMPLOYEE.FULL_NAME.contains(fullName));
         if (branchId != null)
-            condition = condition.and(Tables.EMPLOYEE.BRANCH_ID.contains(branchId));
+            condition = condition.and(Tables.EMPLOYEE.BRANCH_ID.eq(branchId));
 
-        List<Employee> employeeList = employeeService.getEmployees(condition);
+        List<EmployeeDto> employeeList = employeeService.getEmployees(condition);
         return ResponseEntity.ok(employeeList);
     }
 
