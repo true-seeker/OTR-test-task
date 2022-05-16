@@ -2,14 +2,14 @@
 CREATE TABLE branch
 (
     id    SERIAL PRIMARY KEY,
-    title VARCHAR(100)
+    title VARCHAR(100) NOT NULL
 );
 
 --changeset liquibase:2
 CREATE TABLE position
 (
     id    SERIAL PRIMARY KEY,
-    title VARCHAR(30)
+    title VARCHAR(30) NOT NULL
 );
 
 --changeset liquibase:3

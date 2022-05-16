@@ -1,6 +1,7 @@
 package com.example.otrtesttask.controller;
 
 import com.example.otrtesttask.dto.EmployeeDto;
+import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.service.EmployeeService;
@@ -21,7 +22,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> createEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<Object> createEmployee(@RequestBody Employee employee) throws CustomApiException {
         Employee e = employeeService.create(employee);
         return ResponseEntity.ok(e);
     }

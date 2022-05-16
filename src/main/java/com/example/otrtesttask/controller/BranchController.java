@@ -1,10 +1,12 @@
 package com.example.otrtesttask.controller;
 
+import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Branch;
 import com.example.otrtesttask.service.BranchService;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +21,7 @@ public class BranchController {
     BranchService branchService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> createBranch(@RequestBody Branch branch) {
+    public ResponseEntity<Object> createBranch(@RequestBody Branch branch) throws CustomApiException {
         Branch b = branchService.create(branch);
         return ResponseEntity.ok(b);
     }
@@ -37,14 +39,14 @@ public class BranchController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getBranch(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> getBranch(@PathVariable(value = "id") Integer id) throws CustomApiException {
         Branch b = branchService.getBranch(id);
         return ResponseEntity.ok(b);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateBranch(@PathVariable(value = "id") Integer id,
-                                               @RequestBody Branch branch) {
+                                               @RequestBody Branch branch) throws CustomApiException {
         Branch b = branchService.update(id, branch);
         return ResponseEntity.ok(b);
     }

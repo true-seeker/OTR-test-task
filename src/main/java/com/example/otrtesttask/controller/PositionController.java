@@ -1,5 +1,6 @@
 package com.example.otrtesttask.controller;
 
+import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Position;
 import com.example.otrtesttask.service.PositionService;
@@ -19,7 +20,7 @@ public class PositionController {
     private PositionService positionService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> createPosition(@RequestBody Position position) {
+    public ResponseEntity<Object> createPosition(@RequestBody Position position) throws CustomApiException {
         Position p = positionService.create(position);
         return ResponseEntity.ok(p);
     }
