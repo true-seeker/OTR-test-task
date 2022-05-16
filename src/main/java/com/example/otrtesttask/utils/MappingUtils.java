@@ -1,10 +1,12 @@
 package com.example.otrtesttask.utils;
 
 import com.example.otrtesttask.dto.EmployeeDto;
+import com.example.otrtesttask.dto.TaskDto;
 import com.example.otrtesttask.jooq.tables.daos.BranchDao;
 import com.example.otrtesttask.jooq.tables.daos.EmployeeDao;
 import com.example.otrtesttask.jooq.tables.daos.PositionDao;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
+import com.example.otrtesttask.jooq.tables.pojos.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +42,25 @@ public class MappingUtils {
         employee.setFullName(employeeDto.getFullName());
         employee.setPositionId(employeeDto.getPositionId());
         return employee;
+    }
+
+    public TaskDto mapToTaskTdo(Task task) {
+        TaskDto dto = new TaskDto();
+
+        dto.setId(task.getId());
+        dto.setDescription(task.getDescription());
+        dto.setPriority(task.getPriority());
+        dto.setEmployeeId(task.getEmployeeId());
+        dto.setEmployee(employeeDao.fetchOneById(task.getEmployeeId()));
+        return dto;
+    }
+
+    public Task mapToTask(TaskDto taskDto) {
+        Task task = new Task();
+        task.setDescription(taskDto.getDescription());
+        task.setId(taskDto.getId());
+        task.setPriority(taskDto.getPriority());
+        task.setEmployeeId(taskDto.getEmployeeId());
+        return task;
     }
 }
