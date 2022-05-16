@@ -6,7 +6,6 @@ import com.example.otrtesttask.jooq.tables.pojos.Branch;
 import com.example.otrtesttask.service.BranchService;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +51,7 @@ public class BranchController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteBranch(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> deleteBranch(@PathVariable(value = "id") Integer id) throws CustomApiException {
         Boolean b = branchService.delete(id);
         if (b)
             return ResponseEntity.ok("Ok");

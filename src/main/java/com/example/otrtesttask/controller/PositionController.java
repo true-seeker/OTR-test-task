@@ -36,20 +36,20 @@ public class PositionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getPosition(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> getPosition(@PathVariable(value = "id") Integer id) throws CustomApiException {
         Position p = positionService.getPosition(id);
         return ResponseEntity.ok(p);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updatePosition(@PathVariable(value = "id") Integer id,
-                                                 @RequestBody Position position) {
+                                                 @RequestBody Position position) throws CustomApiException {
         Position p = positionService.update(id, position);
         return ResponseEntity.ok(p);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletePosition(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> deletePosition(@PathVariable(value = "id") Integer id) throws CustomApiException {
         Boolean b = positionService.delete(id);
         if (b)
             return ResponseEntity.ok("Ok");

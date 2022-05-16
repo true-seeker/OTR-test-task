@@ -32,17 +32,26 @@ public class EmployeeService {
         return employeeRepository.findAll(condition);
     }
 
-    public Employee getEmployee(Integer id) {
+    public Employee getEmployee(Integer id) throws CustomApiException {
 
-        return employeeRepository.find(id);
+        Employee e = employeeRepository.find(id);
+        if (e == null)
+            throw new CustomApiException(String.format("Employee with id %d not found", id), HttpStatus.NOT_FOUND);
+        return e;
     }
 
-    public Boolean delete(Integer employeeId) {
-        return employeeRepository.delete(employeeId);
+    public Boolean delete(Integer id) throws CustomApiException {
+        Boolean b = employeeRepository.delete(id);
+        if (!b)
+            throw new CustomApiException(String.format("Employee with id %d not found", id), HttpStatus.NOT_FOUND);
+        return b;
     }
 
-    public Employee update(Integer id, Employee employee) {
-        return employeeRepository.update(id, employee);
+    public Employee update(Integer id, Employee employee) throws CustomApiException {
+        Employee e = employeeRepository.update(id, employee);
+        if (e == null)
+            throw new CustomApiException(String.format("Employee with id %d not found", id), HttpStatus.NOT_FOUND);
+        return e;
     }
 
 }

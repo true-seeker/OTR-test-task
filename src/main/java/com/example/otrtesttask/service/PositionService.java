@@ -25,15 +25,24 @@ public class PositionService {
         return positionRepository.findAll(condition);
     }
 
-    public Position getPosition(Integer id) {
-        return positionRepository.find(id);
+    public Position getPosition(Integer id) throws CustomApiException {
+        Position p = positionRepository.find(id);
+        if (p == null)
+            throw new CustomApiException(String.format("Position with id %d not found", id), HttpStatus.NOT_FOUND);
+        return p;
     }
 
-    public Boolean delete(Integer id) {
-        return positionRepository.delete(id);
+    public Boolean delete(Integer id) throws CustomApiException {
+        Boolean b = positionRepository.delete(id);
+        if (!b)
+            throw new CustomApiException(String.format("Branch with id %d not found", id), HttpStatus.NOT_FOUND);
+        return b;
     }
 
-    public Position update(Integer id, Position position) {
-        return positionRepository.update(id, position);
+    public Position update(Integer id, Position position) throws CustomApiException {
+        Position p = positionRepository.update(id, position);
+        if (p == null)
+            throw new CustomApiException(String.format("Position with id %d not found", id), HttpStatus.NOT_FOUND);
+        return p;
     }
 }

@@ -48,20 +48,20 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<Object> getEmployee(@PathVariable(value = "employeeId") Integer id) {
+    public ResponseEntity<Object> getEmployee(@PathVariable(value = "employeeId") Integer id) throws CustomApiException {
         Employee e = employeeService.getEmployee(id);
         return ResponseEntity.ok(e);
     }
 
     @PutMapping("/{employeeId}")
     public ResponseEntity<Object> updateEmployee(@PathVariable(value = "employeeId") Integer id,
-                                                 @RequestBody Employee employee) {
+                                                 @RequestBody Employee employee) throws CustomApiException {
         Employee e = employeeService.update(id, employee);
         return ResponseEntity.ok(e);
     }
 
     @DeleteMapping("/{employeeId}")
-    public ResponseEntity<Object> deleteEmployee(@PathVariable(value = "employeeId") Integer id) {
+    public ResponseEntity<Object> deleteEmployee(@PathVariable(value = "employeeId") Integer id) throws CustomApiException {
         Boolean b = employeeService.delete(id);
         if (b)
             return ResponseEntity.ok("Сотрудник успешно удалён");

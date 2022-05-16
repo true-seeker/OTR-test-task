@@ -28,20 +28,29 @@ public class TaskService {
         return taskRepository.insert(task);
     }
 
-    public Task update(Integer id, Task task) {
-        return taskRepository.update(id, task);
+    public Task update(Integer id, Task task) throws CustomApiException {
+        Task t = taskRepository.update(id, task);
+        if (t == null)
+            throw new CustomApiException(String.format("Task with id %d not found", id), HttpStatus.NOT_FOUND);
+        return t;
     }
 
-    public Task getTask(Integer id) {
-        return taskRepository.find(id);
+    public Task getTask(Integer id) throws CustomApiException {
+        Task t = taskRepository.find(id);
+        if (t == null)
+            throw new CustomApiException(String.format("Task with id %d not found", id), HttpStatus.NOT_FOUND);
+        return t;
     }
 
     public List<TaskDto> getTasks(Condition condition) {
         return taskRepository.findAll(condition);
     }
 
-    public Boolean delete(Integer id) {
-        return taskRepository.delete(id);
+    public Boolean delete(Integer id) throws CustomApiException {
+        Boolean b = taskRepository.delete(id);
+        if (!b)
+            throw new CustomApiException(String.format("Task with id %d not found", id), HttpStatus.NOT_FOUND);
+        return b;
     }
 
     public Task setPriority(Integer id, Short newPriority) throws CustomApiException {
@@ -49,7 +58,8 @@ public class TaskService {
             throw new CustomApiException("Priority must be in range [1;10]", HttpStatus.BAD_REQUEST);
 
         Task task = taskRepository.find(id);
-
+        if (task == null)
+            throw new CustomApiException(String.format("Task with id %d not found", id), HttpStatus.NOT_FOUND);
         task.setPriority(newPriority);
         return taskRepository.update(id, task);
     }

@@ -37,20 +37,20 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getTask(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> getTask(@PathVariable(value = "id") Integer id) throws CustomApiException {
         Task t = taskService.getTask(id);
         return ResponseEntity.ok(t);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateTask(@PathVariable(value = "id") Integer id,
-                                             @RequestBody Task task) {
+                                             @RequestBody Task task) throws CustomApiException {
         Task t = taskService.update(id, task);
         return ResponseEntity.ok(t);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteTask(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> deleteTask(@PathVariable(value = "id") Integer id) throws CustomApiException {
         Boolean b = taskService.delete(id);
         if (b)
             return ResponseEntity.ok("Ok");

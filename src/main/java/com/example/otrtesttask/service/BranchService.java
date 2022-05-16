@@ -39,7 +39,10 @@ public class BranchService {
         return branchRepository.findAll(condition);
     }
 
-    public Boolean delete(Integer id) {
-        return branchRepository.delete(id);
+    public Boolean delete(Integer id) throws CustomApiException {
+        Boolean b = branchRepository.delete(id);
+        if (!b)
+            throw new CustomApiException(String.format("Branch with id %d not found", id), HttpStatus.NOT_FOUND);
+        return b;
     }
 }
