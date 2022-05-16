@@ -28,7 +28,7 @@ public class PositionController {
     public ResponseEntity<Object> getPositions(@RequestParam(required = false) String title) {
         Condition condition = trueCondition();
         if (title != null)
-            condition = condition.and(Tables.POSITION.TITLE.contains(title));
+            condition = condition.and(Tables.POSITION.TITLE.containsIgnoreCase(title));
 
         List<Position> positionList = positionService.getPositions(condition);
         return ResponseEntity.ok(positionList);

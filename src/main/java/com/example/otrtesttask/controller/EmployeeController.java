@@ -38,7 +38,7 @@ public class EmployeeController {
         if (positionId != null)
             condition = condition.and(Tables.EMPLOYEE.POSITION_ID.eq(positionId));
         if (fullName != null)
-            condition = condition.and(Tables.EMPLOYEE.FULL_NAME.contains(fullName));
+            condition = condition.and(Tables.EMPLOYEE.FULL_NAME.containsIgnoreCase(fullName));
         if (branchId != null)
             condition = condition.and(Tables.EMPLOYEE.BRANCH_ID.eq(branchId));
 
