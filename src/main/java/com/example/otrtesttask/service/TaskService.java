@@ -15,6 +15,8 @@ import java.util.List;
 public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
+    private final Short minPriority = 1;
+    private final Short maxPriority = 10;
 
     public Task create(Task task) throws CustomApiException {
         if (task.getEmployeeId() == null)
@@ -40,5 +42,15 @@ public class TaskService {
 
     public Boolean delete(Integer id) {
         return taskRepository.delete(id);
+    }
+
+    public Task setPriority(Integer id, Short newPriority) throws CustomApiException {
+        if (newPriority < minPriority || newPriority > maxPriority)
+            throw new CustomApiException("Priority must be in range [1;10]", HttpStatus.BAD_REQUEST);
+
+        Task task = taskRepository.find(id);
+
+        task.setPriority(newPriority);
+        return taskRepository.update(id, task);
     }
 }

@@ -57,4 +57,11 @@ public class TaskController {
         else
             return ResponseEntity.badRequest().body("Error");
     }
+
+    @PostMapping("/{id}/setPriority")
+    public ResponseEntity<Object> setPriority(@PathVariable(value = "id") Integer id,
+                                              @RequestParam(required = true) Short newPriority) throws CustomApiException {
+        Task t = taskService.setPriority(id, newPriority);
+        return ResponseEntity.ok(t);
+    }
 }
