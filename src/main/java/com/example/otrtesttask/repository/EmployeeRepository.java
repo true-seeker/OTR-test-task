@@ -46,6 +46,7 @@ public class EmployeeRepository {
     public List<EmployeeDto> findAll(Condition condition) {
         return dsl.selectFrom(Tables.EMPLOYEE)
                 .where(condition)
+                .orderBy(Tables.EMPLOYEE.ID)
                 .fetchInto(Employee.class)
                 .stream().map(mappingUtils::mapToEmployeeDto)
                 .collect(Collectors.toList());

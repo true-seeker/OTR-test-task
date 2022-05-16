@@ -5,6 +5,7 @@ import com.example.otrtesttask.dto.TaskDto;
 import com.example.otrtesttask.jooq.tables.daos.BranchDao;
 import com.example.otrtesttask.jooq.tables.daos.EmployeeDao;
 import com.example.otrtesttask.jooq.tables.daos.PositionDao;
+import com.example.otrtesttask.jooq.tables.daos.TaskDao;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class MappingUtils {
     PositionDao positionDao;
     @Autowired
     BranchDao branchDao;
+    @Autowired
+    TaskDao taskDao;
 
     public EmployeeDto mapToEmployeeDto(Employee employee) {
         EmployeeDto dto = new EmployeeDto();
@@ -31,6 +34,7 @@ public class MappingUtils {
         dto.setManager(employeeDao.fetchOneById(employee.getManagerId()));
         dto.setPosition(positionDao.fetchOneById(employee.getPositionId()));
         dto.setBranch(branchDao.fetchOneById(employee.getBranchId()));
+        dto.setTaskCount(taskDao.fetchByEmployeeId(employee.getId()).size());
         return dto;
     }
 

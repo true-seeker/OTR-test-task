@@ -42,6 +42,7 @@ public class PositionRepository {
     public List<Position> findAll(Condition condition) {
         return dsl.selectFrom(Tables.POSITION)
                 .where(condition)
+                .orderBy(Tables.POSITION.ID)
                 .fetchInto(Position.class);
     }
 

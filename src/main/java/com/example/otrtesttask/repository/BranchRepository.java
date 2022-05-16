@@ -40,6 +40,7 @@ public class BranchRepository {
     public List<Branch> findAll(Condition condition) {
         return dsl.selectFrom(Tables.BRANCH)
                 .where(condition)
+                .orderBy(Tables.BRANCH.ID)
                 .fetchInto(Branch.class);
     }
 

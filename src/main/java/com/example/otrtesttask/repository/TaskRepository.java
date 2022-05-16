@@ -44,6 +44,7 @@ public class TaskRepository {
     public List<TaskDto> findAll(Condition condition) {
         return dsl.selectFrom(Tables.TASK)
                 .where(condition)
+                .orderBy(Tables.TASK.PRIORITY.desc(), Tables.TASK.ID)
                 .fetchInto(Task.class)
                 .stream().map(mappingUtils::mapToTaskTdo)
                 .collect(Collectors.toList());

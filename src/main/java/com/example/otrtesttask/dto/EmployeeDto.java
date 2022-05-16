@@ -15,4 +15,5 @@ public class EmployeeDto {
     private Employee manager;
     private Position position;
     private Branch branch;
+    private Integer taskCount;
 }
