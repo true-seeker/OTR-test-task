@@ -16,6 +16,8 @@ public class BranchService {
     private BranchRepository branchRepository;
 
     public Branch create(Branch branch) throws CustomApiException {
+        if (branch.getId() != null)
+            throw new CustomApiException("Id field is prohibited", HttpStatus.BAD_REQUEST);
         if (branch.getTitle() == null)
             throw new CustomApiException("Missing required field: title", HttpStatus.BAD_REQUEST);
         return branchRepository.insert(branch);

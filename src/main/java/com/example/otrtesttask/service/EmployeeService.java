@@ -22,6 +22,8 @@ public class EmployeeService {
     private TaskRepository taskRepository;
 
     public Employee create(Employee employee) throws CustomApiException {
+        if (employee.getId() != null)
+            throw new CustomApiException("Id field is prohibited", HttpStatus.BAD_REQUEST);
         if (employee.getBranchId() == null)
             throw new CustomApiException("Missing required field: branchId", HttpStatus.BAD_REQUEST);
         if (employee.getPositionId() == null)

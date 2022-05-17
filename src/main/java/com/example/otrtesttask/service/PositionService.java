@@ -16,6 +16,8 @@ public class PositionService {
     private PositionRepository positionRepository;
 
     public Position create(Position position) throws CustomApiException {
+        if (position.getId() != null)
+            throw new CustomApiException("Id field is prohibited", HttpStatus.BAD_REQUEST);
         if (position.getTitle() == null)
             throw new CustomApiException("Missing required field: title", HttpStatus.BAD_REQUEST);
         return positionRepository.insert(position);

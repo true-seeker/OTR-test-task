@@ -19,6 +19,8 @@ public class TaskService {
     private final Short maxPriority = 10;
 
     public Task create(Task task) throws CustomApiException {
+        if (task.getId() != null)
+            throw new CustomApiException("Id field is prohibited", HttpStatus.BAD_REQUEST);
         if (task.getEmployeeId() == null)
             throw new CustomApiException("Missing required field: employeeId", HttpStatus.BAD_REQUEST);
         if (task.getDescription() == null)

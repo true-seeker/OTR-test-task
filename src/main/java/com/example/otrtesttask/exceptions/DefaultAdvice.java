@@ -12,6 +12,6 @@ public class DefaultAdvice {
     @ExceptionHandler({CustomApiException.class})
     public ResponseEntity<Response> handleException(CustomApiException e) {
         Response response = new Response(e.getMessage(), e.getStatus());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, e.getStatus());
     }
 }
