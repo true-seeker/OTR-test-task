@@ -51,11 +51,11 @@ public class EmployeeService {
 
         List<Employee> subordinates = employeeRepository.findSubordinates(id);
         if (!subordinates.isEmpty())
-            throw new CustomApiException(String.format("Employee with id %d has subordinates", id), HttpStatus.FORBIDDEN);
+            throw new CustomApiException(String.format("Employee with id %d has subordinates", id), HttpStatus.BAD_REQUEST);
 
         List<Task> taskList = taskRepository.findTasksByEmployeeId(id);
         if (!taskList.isEmpty())
-            throw new CustomApiException(String.format("Employee with id %d has tasks", id), HttpStatus.FORBIDDEN);
+            throw new CustomApiException(String.format("Employee with id %d has tasks", id), HttpStatus.BAD_REQUEST);
 
         return employeeRepository.delete(id);
     }

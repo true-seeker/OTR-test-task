@@ -20,13 +20,13 @@ public class BranchController {
     BranchService branchService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> createBranch(@RequestBody Branch branch) throws CustomApiException {
+    public ResponseEntity<Branch> createBranch(@RequestBody Branch branch) throws CustomApiException {
         Branch b = branchService.create(branch);
         return ResponseEntity.ok(b);
     }
 
     @GetMapping("/")
-    public ResponseEntity<Object> getBranches(@RequestParam(required = false) String title) {
+    public ResponseEntity<List<Branch>> getBranches(@RequestParam(required = false) String title) {
         Condition condition = trueCondition();
 
         if (title != null) {
@@ -38,13 +38,13 @@ public class BranchController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getBranch(@PathVariable(value = "id") Integer id) throws CustomApiException {
+    public ResponseEntity<Branch> getBranch(@PathVariable(value = "id") Integer id) throws CustomApiException {
         Branch b = branchService.getBranch(id);
         return ResponseEntity.ok(b);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateBranch(@PathVariable(value = "id") Integer id,
+    public ResponseEntity<Branch> updateBranch(@PathVariable(value = "id") Integer id,
                                                @RequestBody Branch branch) throws CustomApiException {
         Branch b = branchService.update(id, branch);
         return ResponseEntity.ok(b);

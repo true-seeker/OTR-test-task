@@ -20,13 +20,13 @@ public class PositionController {
     private PositionService positionService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> createPosition(@RequestBody Position position) throws CustomApiException {
+    public ResponseEntity<Position> createPosition(@RequestBody Position position) throws CustomApiException {
         Position p = positionService.create(position);
         return ResponseEntity.ok(p);
     }
 
     @GetMapping("/")
-    public ResponseEntity<Object> getPositions(@RequestParam(required = false) String title) {
+    public ResponseEntity<List<Position>> getPositions(@RequestParam(required = false) String title) {
         Condition condition = trueCondition();
         if (title != null)
             condition = condition.and(Tables.POSITION.TITLE.containsIgnoreCase(title));
@@ -36,14 +36,14 @@ public class PositionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getPosition(@PathVariable(value = "id") Integer id) throws CustomApiException {
+    public ResponseEntity<Position> getPosition(@PathVariable(value = "id") Integer id) throws CustomApiException {
         Position p = positionService.getPosition(id);
         return ResponseEntity.ok(p);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updatePosition(@PathVariable(value = "id") Integer id,
-                                                 @RequestBody Position position) throws CustomApiException {
+    public ResponseEntity<Position> updatePosition(@PathVariable(value = "id") Integer id,
+                                                   @RequestBody Position position) throws CustomApiException {
         Position p = positionService.update(id, position);
         return ResponseEntity.ok(p);
     }

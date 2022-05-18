@@ -1,41 +1,73 @@
 package com.example.otrtesttask.rest;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import com.example.otrtesttask.controller.EmployeeController;
+import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
 
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest
 public class RestApiTest {
+    @Autowired
+    EmployeeController employeeController;
+
     @Test
-    public void employeeDoesNotExists() throws IOException {
-        Integer id = -1;
-        HttpUriRequest request = new HttpGet(String.format("http://localhost:8080/employees/%d", id));
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
-        MatcherAssert.assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
+    public void employeeDoesNotExists() throws CustomApiException {
+        Integer id = 1;
+        ResponseEntity<Employee> responseEntity = employeeController.getEmployee(id);
+        MatcherAssert.assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
     }
 
-    @Transactional
     @Test
-    public void insertNewEmployee() throws IOException {
-        String json = "{\"managerId\": 1, \"positionId\":\"2\", \"fullName\":\"3\",\"branchId\":\"4\"}";
-        HttpPost httpPost = new HttpPost("http://localhost:8080/employees/");
-        httpPost.setEntity(new StringEntity(json));
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setHeader("Content-type", "application/json");
+    @Transactional
+    public void insertNewEmployee() throws CustomApiException {
+        Employee newEmployee = new Employee();
+        newEmployee.setFullName("test");
+        newEmployee.setManagerId(1);
+        newEmployee.setBranchId(1);
+        newEmployee.setPositionId(1);
 
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(httpPost);
-        MatcherAssert.assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        ResponseEntity<Employee> responseEntity = employeeController.createEmployee(newEmployee);
+
+        MatcherAssert.assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
+    }
+
+    @Test
+    @Transactional
+    public void updateEmployee() throws CustomApiException {
+        Employee newEmployee = new Employee();
+        newEmployee.setFullName("test");
+        newEmployee.setManagerId(1);
+        newEmployee.setBranchId(1);
+        newEmployee.setPositionId(1);
+
+        newEmployee = employeeController.createEmployee(newEmployee).getBody();
+
+        ResponseEntity<Employee> responseEntity = employeeController.updateEmployee(newEmployee.getId(), newEmployee);
+
+        MatcherAssert.assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
+    }
+
+    @Test
+    @Transactional
+    public void deleteEmployee() throws CustomApiException {
+        Employee newEmployee = new Employee();
+        newEmployee.setFullName("test");
+        newEmployee.setManagerId(1);
+        newEmployee.setBranchId(1);
+        newEmployee.setPositionId(1);
+
+        newEmployee = employeeController.createEmployee(newEmployee).getBody();
+
+        ResponseEntity<Object> responseEntity = employeeController.deleteEmployee(newEmployee.getId());
+
+        MatcherAssert.assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
     }
 }

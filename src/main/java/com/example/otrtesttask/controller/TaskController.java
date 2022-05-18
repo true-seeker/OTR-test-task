@@ -21,13 +21,13 @@ public class TaskController {
     private TaskService taskService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> createTask(@RequestBody Task task) throws CustomApiException {
+    public ResponseEntity<Task> createTask(@RequestBody Task task) throws CustomApiException {
         Task t = taskService.create(task);
         return ResponseEntity.ok(t);
     }
 
     @GetMapping("/")
-    public ResponseEntity<Object> getTasks(@RequestParam(required = false) String title) {
+    public ResponseEntity<List<TaskDto>> getTasks(@RequestParam(required = false) String title) {
         Condition condition = trueCondition();
 
         if (title != null)
@@ -37,14 +37,14 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getTask(@PathVariable(value = "id") Integer id) throws CustomApiException {
+    public ResponseEntity<Task> getTask(@PathVariable(value = "id") Integer id) throws CustomApiException {
         Task t = taskService.getTask(id);
         return ResponseEntity.ok(t);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateTask(@PathVariable(value = "id") Integer id,
-                                             @RequestBody Task task) throws CustomApiException {
+    public ResponseEntity<Task> updateTask(@PathVariable(value = "id") Integer id,
+                                           @RequestBody Task task) throws CustomApiException {
         Task t = taskService.update(id, task);
         return ResponseEntity.ok(t);
     }
@@ -59,8 +59,8 @@ public class TaskController {
     }
 
     @PostMapping("/{id}/setPriority")
-    public ResponseEntity<Object> setPriority(@PathVariable(value = "id") Integer id,
-                                              @RequestParam(required = true) Short newPriority) throws CustomApiException {
+    public ResponseEntity<Task> setPriority(@PathVariable(value = "id") Integer id,
+                                            @RequestParam(required = true) Short newPriority) throws CustomApiException {
         Task t = taskService.setPriority(id, newPriority);
         return ResponseEntity.ok(t);
     }

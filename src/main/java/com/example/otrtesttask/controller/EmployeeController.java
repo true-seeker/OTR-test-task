@@ -22,13 +22,13 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> createEmployee(@RequestBody Employee employee) throws CustomApiException {
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) throws CustomApiException {
         Employee e = employeeService.create(employee);
         return ResponseEntity.ok(e);
     }
 
     @GetMapping("/")
-    public ResponseEntity<Object> getEmployees(@RequestParam(required = false) Integer managerId,
+    public ResponseEntity<List<EmployeeDto>> getEmployees(@RequestParam(required = false) Integer managerId,
                                                @RequestParam(required = false) String fullName,
                                                @RequestParam(required = false) Integer positionId,
                                                @RequestParam(required = false) Integer branchId) {
@@ -48,13 +48,13 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<Object> getEmployee(@PathVariable(value = "employeeId") Integer id) throws CustomApiException {
+    public ResponseEntity<Employee> getEmployee(@PathVariable(value = "employeeId") Integer id) throws CustomApiException {
         Employee e = employeeService.getEmployee(id);
         return ResponseEntity.ok(e);
     }
 
     @PutMapping("/{employeeId}")
-    public ResponseEntity<Object> updateEmployee(@PathVariable(value = "employeeId") Integer id,
+    public ResponseEntity<Employee> updateEmployee(@PathVariable(value = "employeeId") Integer id,
                                                  @RequestBody Employee employee) throws CustomApiException {
         Employee e = employeeService.update(id, employee);
         return ResponseEntity.ok(e);
