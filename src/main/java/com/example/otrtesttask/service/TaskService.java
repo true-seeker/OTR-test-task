@@ -2,7 +2,9 @@ package com.example.otrtesttask.service;
 
 import com.example.otrtesttask.dto.TaskDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
+import com.example.otrtesttask.repository.EmployeeRepository;
 import com.example.otrtesttask.repository.TaskRepository;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ import java.util.List;
 public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
     private final Short minPriority = 1;
     private final Short maxPriority = 10;
 
@@ -31,15 +36,26 @@ public class TaskService {
         // В запросе не передан priority
         if (task.getPriority() == null)
             throw new CustomApiException("Missing required field: priority", HttpStatus.BAD_REQUEST);
+        // Исполнителя не существует
+        Employee e = employeeRepository.find(task.getEmployeeId());
+        if (e == null)
+            throw new CustomApiException(String.format("Employee with id %d not found", task.getEmployeeId()), HttpStatus.BAD_REQUEST);
+
 
         return taskRepository.insert(task);
     }
 
     public Task update(Integer id, Task task) throws CustomApiException {
+        // Исполнителя не существует
+        Employee e = employeeRepository.find(task.getEmployeeId());
+        if (e == null)
+            throw new CustomApiException(String.format("Employee with id %d not found", task.getEmployeeId()), HttpStatus.BAD_REQUEST);
+
         Task t = taskRepository.update(id, task);
         // Нет сущности с таким идентификатором
         if (t == null)
             throw new CustomApiException(String.format("Task with id %d not found", id), HttpStatus.NOT_FOUND);
+
         return t;
     }
 

@@ -4,7 +4,9 @@ import com.example.otrtesttask.dto.EmployeeDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
+import com.example.otrtesttask.repository.BranchRepository;
 import com.example.otrtesttask.repository.EmployeeRepository;
+import com.example.otrtesttask.repository.PositionRepository;
 import com.example.otrtesttask.repository.TaskRepository;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,12 @@ public class EmployeeService {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    private BranchRepository branchRepository;
+
+    @Autowired
+    private PositionRepository positionRepository;
+
     public Employee create(Employee employee) throws CustomApiException {
         // Если передали id, то возвращаем ошибку
         if (employee.getId() != null)
@@ -35,11 +43,18 @@ public class EmployeeService {
         // В запросе не передан fullName
         if (employee.getFullName() == null)
             throw new CustomApiException("Missing required field: fullName", HttpStatus.BAD_REQUEST);
+        // Не существует должности
+        if (positionRepository.find(employee.getPositionId()) == null)
+            throw new CustomApiException(String.format("Position with id %d not found", employee.getPositionId()), HttpStatus.BAD_REQUEST);
+        // Не существует подразделения
+        if (branchRepository.find(employee.getBranchId()) == null)
+            throw new CustomApiException(String.format("Branch with id %d not found", employee.getBranchId()), HttpStatus.BAD_REQUEST);
         // Начальник не существует
         if (employeeRepository.find(employee.getManagerId()) == null)
-            throw new CustomApiException("Manager does not exist", HttpStatus.BAD_REQUEST);
-
-
+            throw new CustomApiException(String.format("Manager with id %d not found", employee.getManagerId()), HttpStatus.BAD_REQUEST);
+        // Пустое имя
+        if (Objects.equals(employee.getFullName(), ""))
+            throw new CustomApiException("Full name can't be empty", HttpStatus.BAD_REQUEST);
         return employeeRepository.insert(employee);
     }
 
@@ -79,8 +94,17 @@ public class EmployeeService {
         if (Objects.equals(id, employee.getManagerId()))
             throw new CustomApiException("Employee cannot be manager of themself", HttpStatus.NOT_FOUND);
         // Начальник не существует
-        if (employeeRepository.find(employee.getManagerId()) == null)
-            throw new CustomApiException("Manager does not exist", HttpStatus.BAD_REQUEST);
+        if (employee.getManagerId() != null && employeeRepository.find(employee.getManagerId()) == null)
+            throw new CustomApiException(String.format("Manager with id %d not found", employee.getManagerId()), HttpStatus.BAD_REQUEST);
+        // Не существует должности
+        if (employee.getPositionId() != null && positionRepository.find(employee.getPositionId()) == null)
+            throw new CustomApiException(String.format("Position with id %d not found", employee.getPositionId()), HttpStatus.BAD_REQUEST);
+        // Не существует подразделения
+        if (employee.getBranchId() != null && branchRepository.find(employee.getBranchId()) == null)
+            throw new CustomApiException(String.format("Branch with id %d not found", employee.getBranchId()), HttpStatus.BAD_REQUEST);
+        // Пустое имя
+        if (Objects.equals(employee.getFullName(), ""))
+            throw new CustomApiException("Full name can't be empty", HttpStatus.BAD_REQUEST);
 
         Employee e = employeeRepository.update(id, employee);
 
