@@ -64,4 +64,16 @@ public class EmployeeRepository {
                 .fetchInto(Employee.class);
     }
 
+    public List<Employee> findEmployeesByBranchId(Integer id) {
+        return dsl.selectFrom(Tables.EMPLOYEE)
+                .where(Tables.EMPLOYEE.BRANCH_ID.eq(id))
+                .fetchInto(Employee.class);
+    }
+
+    public List<Employee> findEmployeesByPositionId(Integer id) {
+        return dsl.selectFrom(Tables.EMPLOYEE)
+                .where(Tables.EMPLOYEE.POSITION_ID.eq(id))
+                .fetchInto(Employee.class);
+    }
+
 }

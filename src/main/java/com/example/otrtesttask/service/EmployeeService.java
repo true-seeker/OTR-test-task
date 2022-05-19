@@ -22,14 +22,19 @@ public class EmployeeService {
     private TaskRepository taskRepository;
 
     public Employee create(Employee employee) throws CustomApiException {
+        // Если передали id, то возвращаем ошибку
         if (employee.getId() != null)
             throw new CustomApiException("Id field is prohibited", HttpStatus.BAD_REQUEST);
+        // В запросе не передан branchId
         if (employee.getBranchId() == null)
             throw new CustomApiException("Missing required field: branchId", HttpStatus.BAD_REQUEST);
+        // В запросе не передан positionId
         if (employee.getPositionId() == null)
             throw new CustomApiException("Missing required field: positionId", HttpStatus.BAD_REQUEST);
+        // В запросе не передан fullName
         if (employee.getFullName() == null)
             throw new CustomApiException("Missing required field: fullName", HttpStatus.BAD_REQUEST);
+
         return employeeRepository.insert(employee);
     }
 

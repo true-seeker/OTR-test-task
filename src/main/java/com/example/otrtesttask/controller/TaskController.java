@@ -22,12 +22,14 @@ public class TaskController {
 
     @PostMapping("/")
     public ResponseEntity<Task> createTask(@RequestBody Task task) throws CustomApiException {
+//        Добавление задачи
         Task t = taskService.create(task);
         return ResponseEntity.ok(t);
     }
 
     @GetMapping("/")
     public ResponseEntity<List<TaskDto>> getTasks(@RequestParam(required = false) String title) {
+//        Получение списка задач
         Condition condition = trueCondition();
 
         if (title != null)
@@ -38,6 +40,7 @@ public class TaskController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTask(@PathVariable(value = "id") Integer id) throws CustomApiException {
+//        Получение задачи по идентификатору
         Task t = taskService.getTask(id);
         return ResponseEntity.ok(t);
     }
@@ -45,12 +48,14 @@ public class TaskController {
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable(value = "id") Integer id,
                                            @RequestBody Task task) throws CustomApiException {
+//        Изменение информации о задаче
         Task t = taskService.update(id, task);
         return ResponseEntity.ok(t);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteTask(@PathVariable(value = "id") Integer id) throws CustomApiException {
+//        Удаление задачи по идентификатору
         Boolean b = taskService.delete(id);
         if (b)
             return ResponseEntity.ok("Ok");
@@ -61,6 +66,7 @@ public class TaskController {
     @PostMapping("/{id}/setPriority")
     public ResponseEntity<Task> setPriority(@PathVariable(value = "id") Integer id,
                                             @RequestParam(required = true) Short newPriority) throws CustomApiException {
+//        Изменение приоритета задачи
         Task t = taskService.setPriority(id, newPriority);
         return ResponseEntity.ok(t);
     }

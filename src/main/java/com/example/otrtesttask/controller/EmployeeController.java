@@ -23,15 +23,17 @@ public class EmployeeController {
 
     @PostMapping("/")
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) throws CustomApiException {
+        //Добавление сотрудника
         Employee e = employeeService.create(employee);
         return ResponseEntity.ok(e);
     }
 
     @GetMapping("/")
     public ResponseEntity<List<EmployeeDto>> getEmployees(@RequestParam(required = false) Integer managerId,
-                                               @RequestParam(required = false) String fullName,
-                                               @RequestParam(required = false) Integer positionId,
-                                               @RequestParam(required = false) Integer branchId) {
+                                                          @RequestParam(required = false) String fullName,
+                                                          @RequestParam(required = false) Integer positionId,
+                                                          @RequestParam(required = false) Integer branchId) {
+        // Получение списка всех работников
 
         Condition condition = trueCondition();
         if (managerId != null)
@@ -49,23 +51,26 @@ public class EmployeeController {
 
     @GetMapping("/{employeeId}")
     public ResponseEntity<Employee> getEmployee(@PathVariable(value = "employeeId") Integer id) throws CustomApiException {
+//        Получение сотрудника по его идентификатору
         Employee e = employeeService.getEmployee(id);
         return ResponseEntity.ok(e);
     }
 
     @PutMapping("/{employeeId}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable(value = "employeeId") Integer id,
-                                                 @RequestBody Employee employee) throws CustomApiException {
+                                                   @RequestBody Employee employee) throws CustomApiException {
+//        Обновление информации о сотруднике
         Employee e = employeeService.update(id, employee);
         return ResponseEntity.ok(e);
     }
 
     @DeleteMapping("/{employeeId}")
     public ResponseEntity<Object> deleteEmployee(@PathVariable(value = "employeeId") Integer id) throws CustomApiException {
+//        Удаление сотрудника по идентификатору
         Boolean b = employeeService.delete(id);
         if (b)
-            return ResponseEntity.ok("Сотрудник успешно удалён");
+            return ResponseEntity.ok("Employee was deleted successfully");
         else
-            return ResponseEntity.badRequest().body("Произошла ошибка");
+            return ResponseEntity.badRequest().body("Error");
     }
 }

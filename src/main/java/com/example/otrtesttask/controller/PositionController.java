@@ -21,12 +21,14 @@ public class PositionController {
 
     @PostMapping("/")
     public ResponseEntity<Position> createPosition(@RequestBody Position position) throws CustomApiException {
+//        Добавление должности
         Position p = positionService.create(position);
         return ResponseEntity.ok(p);
     }
 
     @GetMapping("/")
     public ResponseEntity<List<Position>> getPositions(@RequestParam(required = false) String title) {
+//        Получение списка должностей
         Condition condition = trueCondition();
         if (title != null)
             condition = condition.and(Tables.POSITION.TITLE.containsIgnoreCase(title));
@@ -37,6 +39,7 @@ public class PositionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Position> getPosition(@PathVariable(value = "id") Integer id) throws CustomApiException {
+//        Получение должности по идентификатору
         Position p = positionService.getPosition(id);
         return ResponseEntity.ok(p);
     }
@@ -44,12 +47,14 @@ public class PositionController {
     @PutMapping("/{id}")
     public ResponseEntity<Position> updatePosition(@PathVariable(value = "id") Integer id,
                                                    @RequestBody Position position) throws CustomApiException {
+//        Изменение информации о должности по идентификатору
         Position p = positionService.update(id, position);
         return ResponseEntity.ok(p);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePosition(@PathVariable(value = "id") Integer id) throws CustomApiException {
+//        Удаление должности
         Boolean b = positionService.delete(id);
         if (b)
             return ResponseEntity.ok("Ok");
