@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class EmployeeService {
@@ -34,6 +35,10 @@ public class EmployeeService {
         // В запросе не передан fullName
         if (employee.getFullName() == null)
             throw new CustomApiException("Missing required field: fullName", HttpStatus.BAD_REQUEST);
+        // Начальник не существует
+        if (employeeRepository.find(employee.getManagerId()) == null)
+            throw new CustomApiException("Manager does not exist", HttpStatus.BAD_REQUEST);
+
 
         return employeeRepository.insert(employee);
     }
@@ -70,7 +75,15 @@ public class EmployeeService {
     }
 
     public Employee update(Integer id, Employee employee) throws CustomApiException {
+        // Сотруднику назначен он же в качестве начальника
+        if (Objects.equals(id, employee.getManagerId()))
+            throw new CustomApiException("Employee cannot be manager of themself", HttpStatus.NOT_FOUND);
+        // Начальник не существует
+        if (employeeRepository.find(employee.getManagerId()) == null)
+            throw new CustomApiException("Manager does not exist", HttpStatus.BAD_REQUEST);
+
         Employee e = employeeRepository.update(id, employee);
+
         // Нет сущности с таким идентификатором
         if (e == null)
             throw new CustomApiException(String.format("Employee with id %d not found", id), HttpStatus.NOT_FOUND);
