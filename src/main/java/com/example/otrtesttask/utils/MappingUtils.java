@@ -8,12 +8,12 @@ import com.example.otrtesttask.jooq.tables.daos.PositionDao;
 import com.example.otrtesttask.jooq.tables.daos.TaskDao;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MappingUtils {
-    //    Configuration configuration = dsl.configuration();
     @Autowired
     EmployeeDao employeeDao;
     @Autowired
@@ -23,6 +23,7 @@ public class MappingUtils {
     @Autowired
     TaskDao taskDao;
 
+    // Employee -> EmployeeDto
     public EmployeeDto mapToEmployeeDto(Employee employee) {
         EmployeeDto dto = new EmployeeDto();
 
@@ -38,6 +39,7 @@ public class MappingUtils {
         return dto;
     }
 
+    // EmployeeDto -> Employee
     public Employee mapToEmployee(EmployeeDto employeeDto) {
         Employee employee = new Employee();
         employee.setId(employeeDto.getId());
@@ -48,7 +50,8 @@ public class MappingUtils {
         return employee;
     }
 
-    public TaskDto mapToTaskTdo(Task task) {
+    // Task -> TaskDto
+    public TaskDto mapToTaskDto(Task task) {
         TaskDto dto = new TaskDto();
 
         dto.setId(task.getId());
@@ -59,6 +62,7 @@ public class MappingUtils {
         return dto;
     }
 
+    // TaskDto -> Task
     public Task mapToTask(TaskDto taskDto) {
         Task task = new Task();
         task.setDescription(taskDto.getDescription());

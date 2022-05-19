@@ -33,6 +33,7 @@ public class BranchService {
 
     public Branch update(Integer id, Branch branch) throws CustomApiException {
         Branch b = branchRepository.update(id, branch);
+        // Нет сущности с таким идентификатором
         if (b == null)
             throw new CustomApiException(String.format("Branch with id %d not found", id), HttpStatus.NOT_FOUND);
         return b;
@@ -40,6 +41,7 @@ public class BranchService {
 
     public Branch getBranch(Integer id) throws CustomApiException {
         Branch b = branchRepository.find(id);
+        // Нет сущности с таким идентификатором
         if (b == null)
             throw new CustomApiException(String.format("Branch with id %d not found", id), HttpStatus.NOT_FOUND);
         return b;
@@ -52,10 +54,12 @@ public class BranchService {
     public Boolean delete(Integer id) throws CustomApiException {
 
         List<Employee> employees = employeeRepository.findEmployeesByBranchId(id);
+        // Это подразделение назначено какому-то сотруднику
         if (employees != null)
             throw new CustomApiException(String.format("Some employees are attached to branch with %d", id), HttpStatus.BAD_REQUEST);
 
         Boolean b = branchRepository.delete(id);
+        // Нет сущности с таким идентификатором
         if (!b)
             throw new CustomApiException(String.format("Branch with id %d not found", id), HttpStatus.NOT_FOUND);
         return b;

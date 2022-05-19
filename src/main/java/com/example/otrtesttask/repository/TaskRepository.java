@@ -46,7 +46,7 @@ public class TaskRepository {
                 .where(condition)
                 .orderBy(Tables.TASK.PRIORITY.desc(), Tables.TASK.ID)
                 .fetchInto(Task.class)
-                .stream().map(mappingUtils::mapToTaskTdo)
+                .stream().map(mappingUtils::mapToTaskDto)
                 .collect(Collectors.toList());
     }
 

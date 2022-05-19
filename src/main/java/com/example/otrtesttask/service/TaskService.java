@@ -3,7 +3,6 @@ package com.example.otrtesttask.service;
 import com.example.otrtesttask.dto.TaskDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
-import com.example.otrtesttask.repository.EmployeeRepository;
 import com.example.otrtesttask.repository.TaskRepository;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;

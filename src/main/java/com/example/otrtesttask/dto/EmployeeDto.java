@@ -7,13 +7,22 @@ import lombok.Data;
 
 @Data
 public class EmployeeDto {
+    // DTO для Employee
     private Integer id;
     private Integer managerId;
     private Integer positionId;
     private String fullName;
     private Integer branchId;
+
+    // Начальник
     private Employee manager;
+
+    // Должность
     private Position position;
+
+    // Подразделение
     private Branch branch;
+
+    // Количество задач
     private Integer taskCount;
 }

@@ -37,6 +37,7 @@ public class PositionService {
 
     public Position getPosition(Integer id) throws CustomApiException {
         Position p = positionRepository.find(id);
+        // Нет сущности с таким идентификатором
         if (p == null)
             throw new CustomApiException(String.format("Position with id %d not found", id), HttpStatus.NOT_FOUND);
         return p;
@@ -44,7 +45,8 @@ public class PositionService {
 
     public Boolean delete(Integer id) throws CustomApiException {
 
-        List<Employee> employees = employeeRepository.findEmployeesByBranchId(id);
+        List<Employee> employees = employeeRepository.findEmployeesByPositionId(id);
+        // Эта должность назначена какому-то сотруднику
         if (employees != null)
             throw new CustomApiException(String.format("Some employees are attached to position with %d", id), HttpStatus.BAD_REQUEST);
 
@@ -56,6 +58,7 @@ public class PositionService {
 
     public Position update(Integer id, Position position) throws CustomApiException {
         Position p = positionRepository.update(id, position);
+        // Нет сущности с таким идентификатором
         if (p == null)
             throw new CustomApiException(String.format("Position with id %d not found", id), HttpStatus.NOT_FOUND);
         return p;

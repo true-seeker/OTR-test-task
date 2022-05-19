@@ -1,8 +1,7 @@
 package com.example.otrtesttask.repository;
 
-import com.example.otrtesttask.jooq.tables.pojos.Position;
 import com.example.otrtesttask.jooq.Tables;
-
+import com.example.otrtesttask.jooq.tables.pojos.Position;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;

@@ -44,6 +44,7 @@ public class EmployeeService {
 
     public Employee getEmployee(Integer id) throws CustomApiException {
         Employee e = employeeRepository.find(id);
+        // Нет сущности с таким идентификатором
         if (e == null)
             throw new CustomApiException(String.format("Employee with id %d not found", id), HttpStatus.NOT_FOUND);
         return e;
@@ -51,13 +52,16 @@ public class EmployeeService {
 
     public Boolean delete(Integer id) throws CustomApiException {
         Employee e = employeeRepository.find(id);
+        // Нет сущности с таким идентификатором
         if (e == null)
             throw new CustomApiException(String.format("Employee with id %d not found", id), HttpStatus.NOT_FOUND);
 
+        // У сотрудника есть подчинённые
         List<Employee> subordinates = employeeRepository.findSubordinates(id);
         if (!subordinates.isEmpty())
             throw new CustomApiException(String.format("Employee with id %d has subordinates", id), HttpStatus.BAD_REQUEST);
 
+        // У сотрудника есть задачи
         List<Task> taskList = taskRepository.findTasksByEmployeeId(id);
         if (!taskList.isEmpty())
             throw new CustomApiException(String.format("Employee with id %d has tasks", id), HttpStatus.BAD_REQUEST);
@@ -67,6 +71,7 @@ public class EmployeeService {
 
     public Employee update(Integer id, Employee employee) throws CustomApiException {
         Employee e = employeeRepository.update(id, employee);
+        // Нет сущности с таким идентификатором
         if (e == null)
             throw new CustomApiException(String.format("Employee with id %d not found", id), HttpStatus.NOT_FOUND);
         return e;

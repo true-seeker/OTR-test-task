@@ -2,7 +2,6 @@ package com.example.otrtesttask.repository;
 
 import com.example.otrtesttask.dto.EmployeeDto;
 import com.example.otrtesttask.jooq.Tables;
-import com.example.otrtesttask.jooq.tables.daos.EmployeeDao;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.utils.MappingUtils;
 import lombok.RequiredArgsConstructor;

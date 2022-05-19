@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest
-public class RestApiTest {
+public class ControllerTest {
     @Autowired
     EmployeeController employeeController;
 
     @Test
-    public void employeeDoesNotExists() throws CustomApiException {
+    public void getEmployee() throws CustomApiException {
         Integer id = 1;
         ResponseEntity<Employee> responseEntity = employeeController.getEmployee(id);
         MatcherAssert.assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));

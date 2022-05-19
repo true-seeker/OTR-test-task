@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Data
 public class Response {
+    // Ответ, который возвращается при получении ошибки от API
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
 
     private String error;
@@ -15,12 +16,9 @@ public class Response {
     private Integer code;
     private String status;
 
-    public Response() {
-        timestamp = new Date();
-    }
-
     public Response(String message, HttpStatus httpStatus) {
-        this();
+        timestamp = new Date();
+
         this.code = httpStatus.value();
         this.status = httpStatus.name();
         this.error = message;
