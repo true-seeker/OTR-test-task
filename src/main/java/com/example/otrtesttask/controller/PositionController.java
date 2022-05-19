@@ -29,6 +29,7 @@ public class PositionController {
     @GetMapping("/")
     public ResponseEntity<List<Position>> getPositions(@RequestParam(required = false) String title) {
 //        Получение списка должностей
+//        Возможен фильтр по полю title
         Condition condition = trueCondition();
         if (title != null)
             condition = condition.and(Tables.POSITION.TITLE.containsIgnoreCase(title));

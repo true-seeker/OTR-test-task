@@ -33,7 +33,8 @@ public class EmployeeController {
                                                           @RequestParam(required = false) String fullName,
                                                           @RequestParam(required = false) Integer positionId,
                                                           @RequestParam(required = false) Integer branchId) {
-        // Получение списка всех работников
+//        Получение списка всех работников
+//        Возможен фильтр по полям:, managerId, fullName, positionId, branchId
 
         Condition condition = trueCondition();
         if (managerId != null)

@@ -47,8 +47,8 @@ public class PositionService {
 
         List<Employee> employees = employeeRepository.findEmployeesByPositionId(id);
         // Эта должность назначена какому-то сотруднику
-        if (employees != null)
-            throw new CustomApiException(String.format("Some employees are attached to position with %d", id), HttpStatus.BAD_REQUEST);
+        if (!employees.isEmpty())
+            throw new CustomApiException(String.format("Some employees are attached to position with id %d", id), HttpStatus.BAD_REQUEST);
 
         Boolean b = positionRepository.delete(id);
         if (!b)

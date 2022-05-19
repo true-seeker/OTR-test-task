@@ -55,8 +55,8 @@ public class BranchService {
 
         List<Employee> employees = employeeRepository.findEmployeesByBranchId(id);
         // Это подразделение назначено какому-то сотруднику
-        if (employees != null)
-            throw new CustomApiException(String.format("Some employees are attached to branch with %d", id), HttpStatus.BAD_REQUEST);
+        if (!employees.isEmpty())
+            throw new CustomApiException(String.format("Some employees are attached to branch with id %d", id), HttpStatus.BAD_REQUEST);
 
         Boolean b = branchRepository.delete(id);
         // Нет сущности с таким идентификатором

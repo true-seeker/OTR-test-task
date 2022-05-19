@@ -29,6 +29,7 @@ public class BranchController {
     @GetMapping("/")
     public ResponseEntity<List<Branch>> getBranches(@RequestParam(required = false) String title) {
 //        Получение списка подразделений
+//        Возможен фильтр по полю title
         Condition condition = trueCondition();
 
         if (title != null) {

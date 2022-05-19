@@ -30,6 +30,7 @@ public class TaskController {
     @GetMapping("/")
     public ResponseEntity<List<TaskDto>> getTasks(@RequestParam(required = false) String title) {
 //        Получение списка задач
+//        Возможен фильтр по полю title
         Condition condition = trueCondition();
 
         if (title != null)
