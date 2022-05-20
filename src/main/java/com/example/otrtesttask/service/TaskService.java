@@ -2,6 +2,7 @@ package com.example.otrtesttask.service;
 
 import com.example.otrtesttask.dto.TaskDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
 import com.example.otrtesttask.repository.EmployeeRepository;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static org.jooq.impl.DSL.trueCondition;
 
 @Service
 public class TaskService {
@@ -68,7 +71,17 @@ public class TaskService {
         return t;
     }
 
-    public List<TaskDto> getTasks(Condition condition) {
+    public List<TaskDto> getTasks(TaskDto taskDto) {
+
+        Condition condition = trueCondition();
+
+        if (taskDto.getDescription() != null)
+            condition = condition.and(Tables.TASK.DESCRIPTION.containsIgnoreCase(taskDto.getDescription()));
+        if (taskDto.getPriority() != null)
+            condition = condition.and(Tables.TASK.PRIORITY.eq(taskDto.getPriority()));
+        if (taskDto.getEmployeeId() != null)
+            condition = condition.and(Tables.TASK.EMPLOYEE_ID.eq(taskDto.getEmployeeId()));
+
         return taskRepository.findAll(condition);
     }
 

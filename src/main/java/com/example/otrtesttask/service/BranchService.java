@@ -1,6 +1,8 @@
 package com.example.otrtesttask.service;
 
+import com.example.otrtesttask.dto.BranchDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Branch;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.repository.BranchRepository;
@@ -11,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static org.jooq.impl.DSL.trueCondition;
 
 @Service
 public class BranchService {
@@ -47,7 +51,13 @@ public class BranchService {
         return b;
     }
 
-    public List<Branch> getBranches(Condition condition) {
+    public List<Branch> getBranches(BranchDto branchDto) {
+        Condition condition = trueCondition();
+
+        if (branchDto.getTitle() != null) {
+            condition = condition.and(Tables.BRANCH.TITLE.containsIgnoreCase(branchDto.getTitle()));
+        }
+
         return branchRepository.findAll(condition);
     }
 

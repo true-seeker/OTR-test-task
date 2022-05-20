@@ -2,17 +2,13 @@ package com.example.otrtesttask.controller;
 
 import com.example.otrtesttask.dto.TaskDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
-import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
 import com.example.otrtesttask.service.TaskService;
-import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.jooq.impl.DSL.trueCondition;
 
 @RestController
 @RequestMapping("/tasks")
@@ -28,14 +24,17 @@ public class TaskController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<TaskDto>> getTasks(@RequestParam(required = false) String title) {
+    public ResponseEntity<List<TaskDto>> getTasks(@RequestParam(required = false) Short priority,
+                                                  @RequestParam(required = false) String description,
+                                                  @RequestParam(required = false) Integer employeeId) {
 //        Получение списка задач
-//        Возможен фильтр по полю title
-        Condition condition = trueCondition();
+//        Возможен фильтр по полю priority, description, employeeId
+        TaskDto taskDto = new TaskDto();
+        taskDto.setPriority(priority);
+        taskDto.setEmployeeId(employeeId);
+        taskDto.setDescription(description);
 
-        if (title != null)
-            condition = condition.and(Tables.BRANCH.TITLE.containsIgnoreCase(title));
-        List<TaskDto> taskList = taskService.getTasks(condition);
+        List<TaskDto> taskList = taskService.getTasks(taskDto);
         return ResponseEntity.ok(taskList);
     }
 

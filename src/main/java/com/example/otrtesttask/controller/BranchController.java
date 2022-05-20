@@ -1,17 +1,14 @@
 package com.example.otrtesttask.controller;
 
+import com.example.otrtesttask.dto.BranchDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
-import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Branch;
 import com.example.otrtesttask.service.BranchService;
-import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.jooq.impl.DSL.trueCondition;
 
 @RestController
 @RequestMapping("/branches")
@@ -30,13 +27,10 @@ public class BranchController {
     public ResponseEntity<List<Branch>> getBranches(@RequestParam(required = false) String title) {
 //        Получение списка подразделений
 //        Возможен фильтр по полю title
-        Condition condition = trueCondition();
+        BranchDto branchDto = new BranchDto();
+        branchDto.setTitle(title);
 
-        if (title != null) {
-            condition = condition.and(Tables.BRANCH.TITLE.containsIgnoreCase(title));
-        }
-
-        List<Branch> branchList = branchService.getBranches(condition);
+        List<Branch> branchList = branchService.getBranches(branchDto);
         return ResponseEntity.ok(branchList);
     }
 

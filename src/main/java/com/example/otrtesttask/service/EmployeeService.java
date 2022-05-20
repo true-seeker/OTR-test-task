@@ -2,6 +2,7 @@ package com.example.otrtesttask.service;
 
 import com.example.otrtesttask.dto.EmployeeDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
 import com.example.otrtesttask.repository.BranchRepository;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+
+import static org.jooq.impl.DSL.trueCondition;
 
 @Service
 public class EmployeeService {
@@ -58,7 +61,16 @@ public class EmployeeService {
         return employeeRepository.insert(employee);
     }
 
-    public List<EmployeeDto> getEmployees(Condition condition) {
+    public List<EmployeeDto> getEmployees(EmployeeDto employeeDto) {
+        Condition condition = trueCondition();
+        if (employeeDto.getManagerId() != null)
+            condition = condition.and(Tables.EMPLOYEE.MANAGER_ID.eq(employeeDto.getManagerId()));
+        if (employeeDto.getPositionId() != null)
+            condition = condition.and(Tables.EMPLOYEE.POSITION_ID.eq(employeeDto.getPositionId()));
+        if (employeeDto.getFullName() != null)
+            condition = condition.and(Tables.EMPLOYEE.FULL_NAME.containsIgnoreCase(employeeDto.getFullName()));
+        if (employeeDto.getBranchId() != null)
+            condition = condition.and(Tables.EMPLOYEE.BRANCH_ID.eq(employeeDto.getBranchId()));
         return employeeRepository.findAll(condition);
     }
 

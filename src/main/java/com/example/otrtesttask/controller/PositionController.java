@@ -1,17 +1,14 @@
 package com.example.otrtesttask.controller;
 
+import com.example.otrtesttask.dto.PositionDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
-import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Position;
 import com.example.otrtesttask.service.PositionService;
-import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.jooq.impl.DSL.trueCondition;
 
 @RestController
 @RequestMapping("/positions")
@@ -30,11 +27,10 @@ public class PositionController {
     public ResponseEntity<List<Position>> getPositions(@RequestParam(required = false) String title) {
 //        Получение списка должностей
 //        Возможен фильтр по полю title
-        Condition condition = trueCondition();
-        if (title != null)
-            condition = condition.and(Tables.POSITION.TITLE.containsIgnoreCase(title));
+        PositionDto positionDto = new PositionDto();
+        positionDto.setTitle(title);
 
-        List<Position> positionList = positionService.getPositions(condition);
+        List<Position> positionList = positionService.getPositions(positionDto);
         return ResponseEntity.ok(positionList);
     }
 
