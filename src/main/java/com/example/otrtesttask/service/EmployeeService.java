@@ -77,7 +77,7 @@ public class EmployeeService {
             throw new CustomApiException(String.format("Employee with id %d not found", id), HttpStatus.NOT_FOUND);
 
         // У сотрудника есть подчинённые
-        List<Employee> subordinates = employeeRepository.findSubordinates(id);
+        List<Employee> subordinates = employeeRepository.findSubordinatesByManagerId(id);
         if (!subordinates.isEmpty())
             throw new CustomApiException(String.format("Employee with id %d has subordinates", id), HttpStatus.BAD_REQUEST);
 
@@ -105,7 +105,8 @@ public class EmployeeService {
         // Пустое имя
         if (Objects.equals(employee.getFullName(), ""))
             throw new CustomApiException("Full name can't be empty", HttpStatus.BAD_REQUEST);
-
+        //Провекра ом кого-либо не может быть его подчиненный
+        checkChainOfCommand(id, employee.getManagerId());
         Employee e = employeeRepository.update(id, employee);
 
         // Нет сущности с таким идентификатором
@@ -114,5 +115,12 @@ public class EmployeeService {
         return e;
     }
 
-
+    private void checkChainOfCommand(Integer employeeId, Integer managerId) throws CustomApiException {
+        List<Employee> subordinates = employeeRepository.findSubordinatesByManagerId(employeeId);
+        for (Employee subordinate : subordinates) {
+            if (Objects.equals(subordinate.getId(), managerId))
+                throw new CustomApiException(String.format("Employee with id %d can't be manager because chain of command is broken", managerId), HttpStatus.BAD_REQUEST);
+            checkChainOfCommand(subordinate.getId(), managerId);
+        }
+    }
 }
