@@ -17,7 +17,6 @@ public class BranchController {
     @Autowired
     BranchService branchService;
 
-    private final Integer defaultPageSize = 50;
 
     @PostMapping("/")
     public ResponseEntity<BranchDto> createBranch(@RequestBody Branch branch) throws CustomApiException {

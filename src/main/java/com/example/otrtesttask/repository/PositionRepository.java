@@ -1,5 +1,6 @@
 package com.example.otrtesttask.repository;
 
+import com.example.otrtesttask.dto.PositionDto;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Position;
 import lombok.RequiredArgsConstructor;
@@ -17,32 +18,34 @@ public class PositionRepository {
     @Autowired
     private final DSLContext dsl;
 
-    public Position insert(Position position) {
+    public PositionDto insert(Position position) {
         return dsl.insertInto(Tables.POSITION)
                 .set(dsl.newRecord(Tables.POSITION, position))
                 .returning()
-                .fetchOneInto(Position.class);
+                .fetchOneInto(PositionDto.class);
     }
 
-    public Position update(Integer id, Position position) {
+    public PositionDto update(Integer id, Position position) {
         return dsl.update(Tables.POSITION)
                 .set(dsl.newRecord(Tables.POSITION, position))
                 .where(Tables.POSITION.ID.eq(id))
                 .returning()
-                .fetchOneInto(Position.class);
+                .fetchOneInto(PositionDto.class);
     }
 
-    public Position find(Integer id) {
+    public PositionDto find(Integer id) {
         return dsl.selectFrom(Tables.POSITION)
                 .where(Tables.POSITION.ID.eq(id))
-                .fetchOneInto(Position.class);
+                .fetchOneInto(PositionDto.class);
     }
 
-    public List<Position> findAll(Condition condition) {
+    public List<PositionDto> findAll(Condition condition, Integer pageSize, Integer pageNumber) {
         return dsl.selectFrom(Tables.POSITION)
                 .where(condition)
                 .orderBy(Tables.POSITION.ID)
-                .fetchInto(Position.class);
+                .limit(pageSize)
+                .offset(pageNumber * pageSize)
+                .fetchInto(PositionDto.class);
     }
 
     public Boolean delete(Integer id) {
@@ -51,4 +54,10 @@ public class PositionRepository {
                 .execute() == 1;
     }
 
+    public Integer getTotalItems(Condition condition) {
+        return dsl.selectCount()
+                .from(Tables.POSITION)
+                .where(condition)
+                .fetchOneInto(Integer.class);
+    }
 }

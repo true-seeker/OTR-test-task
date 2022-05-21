@@ -1,12 +1,14 @@
 package com.example.otrtesttask.service;
 
 import com.example.otrtesttask.dto.PositionDto;
+import com.example.otrtesttask.dto.PositionResponseDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.jooq.tables.pojos.Position;
 import com.example.otrtesttask.repository.EmployeeRepository;
 import com.example.otrtesttask.repository.PositionRepository;
+import com.example.otrtesttask.utils.MappingUtils;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +22,12 @@ import static org.jooq.impl.DSL.trueCondition;
 public class PositionService {
     @Autowired
     private PositionRepository positionRepository;
-
+    private final MappingUtils mappingUtils = new MappingUtils();
     @Autowired
     private EmployeeRepository employeeRepository;
+    private final Integer defaultPageSize = 50;
 
-    public Position create(Position position) throws CustomApiException {
+    public PositionDto create(Position position) throws CustomApiException {
         // Если передали id, то возвращаем ошибку
         if (position.getId() != null)
             throw new CustomApiException("Id field is prohibited", HttpStatus.BAD_REQUEST);
@@ -35,16 +38,21 @@ public class PositionService {
         return positionRepository.insert(position);
     }
 
-    public List<Position> getPositions(PositionDto positionDto) {
+    public PositionResponseDto getPositions(PositionDto positionDto, Integer pageSize, Integer pageNumber) {
+        if (pageSize > defaultPageSize)
+            pageSize = defaultPageSize;
+        
         Condition condition = trueCondition();
         if (positionDto.getTitle() != null)
             condition = condition.and(Tables.POSITION.TITLE.containsIgnoreCase(positionDto.getTitle()));
 
-        return positionRepository.findAll(condition);
+        return mappingUtils.mapToPositionResponseDto(positionRepository.findAll(condition, pageSize, pageNumber),
+                pageNumber,
+                positionRepository.getTotalItems(condition));
     }
 
-    public Position getPosition(Integer id) throws CustomApiException {
-        Position p = positionRepository.find(id);
+    public PositionDto getPosition(Integer id) throws CustomApiException {
+        PositionDto p = positionRepository.find(id);
         // Нет сущности с таким идентификатором
         if (p == null)
             throw new CustomApiException(String.format("Position with id %d not found", id), HttpStatus.NOT_FOUND);
@@ -64,8 +72,8 @@ public class PositionService {
         return b;
     }
 
-    public Position update(Integer id, Position position) throws CustomApiException {
-        Position p = positionRepository.update(id, position);
+    public PositionDto update(Integer id, Position position) throws CustomApiException {
+        PositionDto p = positionRepository.update(id, position);
         // Нет сущности с таким идентификатором
         if (p == null)
             throw new CustomApiException(String.format("Position with id %d not found", id), HttpStatus.NOT_FOUND);

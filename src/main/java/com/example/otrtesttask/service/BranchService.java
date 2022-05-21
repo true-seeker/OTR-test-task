@@ -25,6 +25,8 @@ public class BranchService {
     @Autowired
     private EmployeeRepository employeeRepository;
     private final MappingUtils mappingUtils = new MappingUtils();
+    private final Integer defaultPageSize = 50;
+
 
     public BranchDto create(Branch branch) throws CustomApiException {
 
@@ -58,6 +60,9 @@ public class BranchService {
     }
 
     public BranchResponseDto getBranches(BranchDto branchDto, Integer pageSize, Integer pageNumber) {
+        if (pageSize > defaultPageSize)
+            pageSize = defaultPageSize;
+
         Condition condition = trueCondition();
         if (branchDto.getTitle() != null) {
             condition = condition.and(Tables.BRANCH.TITLE.containsIgnoreCase(branchDto.getTitle()));

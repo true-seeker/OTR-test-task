@@ -1,6 +1,7 @@
 package com.example.otrtesttask.controller;
 
 import com.example.otrtesttask.dto.PositionDto;
+import com.example.otrtesttask.dto.PositionResponseDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.tables.pojos.Position;
 import com.example.otrtesttask.service.PositionService;
@@ -17,35 +18,38 @@ public class PositionController {
     private PositionService positionService;
 
     @PostMapping("/")
-    public ResponseEntity<Position> createPosition(@RequestBody Position position) throws CustomApiException {
+    public ResponseEntity<PositionDto> createPosition(@RequestBody Position position) throws CustomApiException {
 //        Добавление должности
-        Position p = positionService.create(position);
+        PositionDto p = positionService.create(position);
         return ResponseEntity.ok(p);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Position>> getPositions(@RequestParam(required = false) String title) {
+    public ResponseEntity<PositionResponseDto> getPositions(@RequestParam(required = false) String title,
+                                                            @RequestParam(required = false, defaultValue = "50") Integer pageSize,
+                                                            @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
+
 //        Получение списка должностей
 //        Возможен фильтр по полю title
         PositionDto positionDto = new PositionDto();
         positionDto.setTitle(title);
 
-        List<Position> positionList = positionService.getPositions(positionDto);
-        return ResponseEntity.ok(positionList);
+        PositionResponseDto positionResponseDto = positionService.getPositions(positionDto, pageSize, pageNumber);
+        return ResponseEntity.ok(positionResponseDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Position> getPosition(@PathVariable(value = "id") Integer id) throws CustomApiException {
+    public ResponseEntity<PositionDto> getPosition(@PathVariable(value = "id") Integer id) throws CustomApiException {
 //        Получение должности по идентификатору
-        Position p = positionService.getPosition(id);
+        PositionDto p = positionService.getPosition(id);
         return ResponseEntity.ok(p);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Position> updatePosition(@PathVariable(value = "id") Integer id,
+    public ResponseEntity<PositionDto> updatePosition(@PathVariable(value = "id") Integer id,
                                                    @RequestBody Position position) throws CustomApiException {
 //        Изменение информации о должности по идентификатору
-        Position p = positionService.update(id, position);
+        PositionDto p = positionService.update(id, position);
         return ResponseEntity.ok(p);
     }
 

@@ -1,9 +1,6 @@
 package com.example.otrtesttask.utils;
 
-import com.example.otrtesttask.dto.BranchDto;
-import com.example.otrtesttask.dto.BranchResponseDto;
-import com.example.otrtesttask.dto.EmployeeDto;
-import com.example.otrtesttask.dto.TaskDto;
+import com.example.otrtesttask.dto.*;
 import com.example.otrtesttask.jooq.tables.daos.BranchDao;
 import com.example.otrtesttask.jooq.tables.daos.EmployeeDao;
 import com.example.otrtesttask.jooq.tables.daos.PositionDao;
@@ -93,5 +90,14 @@ public class MappingUtils {
         branchResponseDto.setCurrentPage(currentPage);
         branchResponseDto.setTotalItems(totalItems);
         return branchResponseDto;
+    }
+
+    // List<PositionDto> -> PositionResponseDto
+    public PositionResponseDto mapToPositionResponseDto(List<PositionDto> positionDtoList, Integer currentPage, Integer totalItems) {
+        PositionResponseDto positionResponseDto = new PositionResponseDto();
+        positionResponseDto.setPositionDtoList(positionDtoList);
+        positionResponseDto.setCurrentPage(currentPage);
+        positionResponseDto.setTotalItems(totalItems);
+        return positionResponseDto;
     }
 }
