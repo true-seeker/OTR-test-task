@@ -1,6 +1,7 @@
 package com.example.otrtesttask.controller;
 
 import com.example.otrtesttask.dto.BranchDto;
+import com.example.otrtesttask.dto.BranchResponseDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.tables.pojos.Branch;
 import com.example.otrtesttask.service.BranchService;
@@ -16,33 +17,37 @@ public class BranchController {
     @Autowired
     BranchService branchService;
 
+    private final Integer defaultPageSize = 50;
+
     @PostMapping("/")
-    public ResponseEntity<Branch> createBranch(@RequestBody Branch branch) throws CustomApiException {
+    public ResponseEntity<BranchDto> createBranch(@RequestBody Branch branch) throws CustomApiException {
 //        Добавление подразделения
         Branch b = branchService.create(branch);
         return ResponseEntity.ok(b);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Branch>> getBranches(@RequestParam(required = false) String title) {
+    public ResponseEntity<List<BranchResponseDto>> getBranches(@RequestParam(required = false) String title,
+                                                               @RequestParam(required = false, defaultValue = "2") Integer pageSize,
+                                                               @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
 //        Получение списка подразделений
 //        Возможен фильтр по полю title
         BranchDto branchDto = new BranchDto();
         branchDto.setTitle(title);
 
-        List<Branch> branchList = branchService.getBranches(branchDto);
+        List<Branch> branchList = branchService.getBranches(branchDto, pageSize, pageNumber);
         return ResponseEntity.ok(branchList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Branch> getBranch(@PathVariable(value = "id") Integer id) throws CustomApiException {
+    public ResponseEntity<BranchDto> getBranch(@PathVariable(value = "id") Integer id) throws CustomApiException {
 //        Получение подразделения по идентификатору
         Branch b = branchService.getBranch(id);
         return ResponseEntity.ok(b);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Branch> updateBranch(@PathVariable(value = "id") Integer id,
+    public ResponseEntity<BranchDto> updateBranch(@PathVariable(value = "id") Integer id,
                                                @RequestBody Branch branch) throws CustomApiException {
 //        Обновление информации о подразделении
         Branch b = branchService.update(id, branch);

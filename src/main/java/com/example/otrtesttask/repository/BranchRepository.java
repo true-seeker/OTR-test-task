@@ -37,10 +37,12 @@ public class BranchRepository {
                 .fetchOneInto(Branch.class);
     }
 
-    public List<Branch> findAll(Condition condition) {
+    public List<Branch> findAll(Condition condition, Integer pageSize, Integer pageNumber) {
         return dsl.selectFrom(Tables.BRANCH)
                 .where(condition)
                 .orderBy(Tables.BRANCH.ID)
+                .limit(pageSize)
+                .offset(pageNumber*pageSize)
                 .fetchInto(Branch.class);
     }
 

@@ -1,6 +1,7 @@
 package com.example.otrtesttask.service;
 
 import com.example.otrtesttask.dto.BranchDto;
+import com.example.otrtesttask.dto.BranchResponseDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Branch;
@@ -51,14 +52,14 @@ public class BranchService {
         return b;
     }
 
-    public List<Branch> getBranches(BranchDto branchDto) {
+    public List<BranchResponseDto> getBranches(BranchDto branchDto, Integer pageSize, Integer pageNumber) {
         Condition condition = trueCondition();
 
         if (branchDto.getTitle() != null) {
             condition = condition.and(Tables.BRANCH.TITLE.containsIgnoreCase(branchDto.getTitle()));
         }
 
-        return branchRepository.findAll(condition);
+        return branchRepository.findAll(condition, pageSize, pageNumber);
     }
 
     public Boolean delete(Integer id) throws CustomApiException {
