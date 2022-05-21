@@ -1,16 +1,21 @@
 package com.example.otrtesttask.utils;
 
+import com.example.otrtesttask.dto.BranchDto;
+import com.example.otrtesttask.dto.BranchResponseDto;
 import com.example.otrtesttask.dto.EmployeeDto;
 import com.example.otrtesttask.dto.TaskDto;
 import com.example.otrtesttask.jooq.tables.daos.BranchDao;
 import com.example.otrtesttask.jooq.tables.daos.EmployeeDao;
 import com.example.otrtesttask.jooq.tables.daos.PositionDao;
 import com.example.otrtesttask.jooq.tables.daos.TaskDao;
+import com.example.otrtesttask.jooq.tables.pojos.Branch;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MappingUtils {
@@ -70,5 +75,23 @@ public class MappingUtils {
         task.setPriority(taskDto.getPriority());
         task.setEmployeeId(taskDto.getEmployeeId());
         return task;
+    }
+
+    // Branch -> BranchDto
+    public BranchDto mapToBranchDto(Branch branch) {
+        BranchDto branchDto = new BranchDto();
+
+        branchDto.setId(branch.getId());
+        branchDto.setTitle(branch.getTitle());
+        return branchDto;
+    }
+
+    // List<BranchDto> -> BranchResponseDto
+    public BranchResponseDto mapToBranchResponseDto(List<BranchDto> branchDtoList, Integer currentPage, Integer totalItems) {
+        BranchResponseDto branchResponseDto = new BranchResponseDto();
+        branchResponseDto.setBranchDtoList(branchDtoList);
+        branchResponseDto.setCurrentPage(currentPage);
+        branchResponseDto.setTotalItems(totalItems);
+        return branchResponseDto;
     }
 }

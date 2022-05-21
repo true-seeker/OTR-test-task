@@ -8,6 +8,7 @@ import com.example.otrtesttask.jooq.tables.pojos.Branch;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.repository.BranchRepository;
 import com.example.otrtesttask.repository.EmployeeRepository;
+import com.example.otrtesttask.utils.MappingUtils;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,9 @@ public class BranchService {
     private BranchRepository branchRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    private final MappingUtils mappingUtils = new MappingUtils();
 
-    public Branch create(Branch branch) throws CustomApiException {
+    public BranchDto create(Branch branch) throws CustomApiException {
 
         // Если передали id, то возвращаем ошибку
         if (branch.getId() != null)
@@ -36,30 +38,35 @@ public class BranchService {
         return branchRepository.insert(branch);
     }
 
-    public Branch update(Integer id, Branch branch) throws CustomApiException {
-        Branch b = branchRepository.update(id, branch);
+    public BranchDto update(Integer id, Branch branch) throws CustomApiException {
+        BranchDto b = branchRepository.update(id, branch);
         // Нет сущности с таким идентификатором
         if (b == null)
             throw new CustomApiException(String.format("Branch with id %d not found", id), HttpStatus.NOT_FOUND);
+
+
         return b;
     }
 
-    public Branch getBranch(Integer id) throws CustomApiException {
-        Branch b = branchRepository.find(id);
+    public BranchDto getBranch(Integer id) throws CustomApiException {
+        BranchDto branchDto = branchRepository.find(id);
         // Нет сущности с таким идентификатором
-        if (b == null)
+        if (branchDto == null)
             throw new CustomApiException(String.format("Branch with id %d not found", id), HttpStatus.NOT_FOUND);
-        return b;
+
+        return branchDto;
     }
 
-    public List<BranchResponseDto> getBranches(BranchDto branchDto, Integer pageSize, Integer pageNumber) {
+    public BranchResponseDto getBranches(BranchDto branchDto, Integer pageSize, Integer pageNumber) {
         Condition condition = trueCondition();
-
         if (branchDto.getTitle() != null) {
             condition = condition.and(Tables.BRANCH.TITLE.containsIgnoreCase(branchDto.getTitle()));
         }
 
-        return branchRepository.findAll(condition, pageSize, pageNumber);
+        return mappingUtils.mapToBranchResponseDto(
+                branchRepository.findAll(condition, pageSize, pageNumber),
+                pageNumber,
+                branchRepository.getTotalItems(condition));
     }
 
     public Boolean delete(Integer id) throws CustomApiException {

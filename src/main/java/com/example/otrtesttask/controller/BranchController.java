@@ -22,35 +22,35 @@ public class BranchController {
     @PostMapping("/")
     public ResponseEntity<BranchDto> createBranch(@RequestBody Branch branch) throws CustomApiException {
 //        Добавление подразделения
-        Branch b = branchService.create(branch);
+        BranchDto b = branchService.create(branch);
         return ResponseEntity.ok(b);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<BranchResponseDto>> getBranches(@RequestParam(required = false) String title,
-                                                               @RequestParam(required = false, defaultValue = "2") Integer pageSize,
-                                                               @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
+    public ResponseEntity<BranchResponseDto> getBranches(@RequestParam(required = false) String title,
+                                                         @RequestParam(required = false, defaultValue = "50") Integer pageSize,
+                                                         @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
 //        Получение списка подразделений
 //        Возможен фильтр по полю title
         BranchDto branchDto = new BranchDto();
         branchDto.setTitle(title);
 
-        List<Branch> branchList = branchService.getBranches(branchDto, pageSize, pageNumber);
-        return ResponseEntity.ok(branchList);
+        BranchResponseDto branchResponseDto = branchService.getBranches(branchDto, pageSize, pageNumber);
+        return ResponseEntity.ok(branchResponseDto);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BranchDto> getBranch(@PathVariable(value = "id") Integer id) throws CustomApiException {
 //        Получение подразделения по идентификатору
-        Branch b = branchService.getBranch(id);
+        BranchDto b = branchService.getBranch(id);
         return ResponseEntity.ok(b);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BranchDto> updateBranch(@PathVariable(value = "id") Integer id,
-                                               @RequestBody Branch branch) throws CustomApiException {
+                                                  @RequestBody Branch branch) throws CustomApiException {
 //        Обновление информации о подразделении
-        Branch b = branchService.update(id, branch);
+        BranchDto b = branchService.update(id, branch);
         return ResponseEntity.ok(b);
     }
 

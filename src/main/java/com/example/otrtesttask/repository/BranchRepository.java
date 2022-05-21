@@ -1,7 +1,9 @@
 package com.example.otrtesttask.repository;
 
+import com.example.otrtesttask.dto.BranchDto;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Branch;
+import com.example.otrtesttask.utils.MappingUtils;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -16,39 +18,46 @@ public class BranchRepository {
     @Autowired
     private final DSLContext dsl;
 
-    public Branch insert(Branch branch) {
+    public BranchDto insert(Branch branch) {
         return dsl.insertInto(Tables.BRANCH)
                 .set(dsl.newRecord(Tables.BRANCH, branch))
                 .returning()
-                .fetchOneInto(Branch.class);
+                .fetchOneInto(BranchDto.class);
     }
 
-    public Branch update(Integer id, Branch branch) {
+    public BranchDto update(Integer id, Branch branch) {
         return dsl.update(Tables.BRANCH)
                 .set(dsl.newRecord(Tables.BRANCH, branch))
                 .where(Tables.BRANCH.ID.eq(id))
                 .returning()
-                .fetchOneInto(Branch.class);
+                .fetchOneInto(BranchDto.class);
     }
 
-    public Branch find(Integer id) {
+    public BranchDto find(Integer id) {
         return dsl.selectFrom(Tables.BRANCH)
                 .where(Tables.BRANCH.ID.eq(id))
-                .fetchOneInto(Branch.class);
+                .fetchOneInto(BranchDto.class);
     }
 
-    public List<Branch> findAll(Condition condition, Integer pageSize, Integer pageNumber) {
+    public List<BranchDto> findAll(Condition condition, Integer pageSize, Integer pageNumber) {
         return dsl.selectFrom(Tables.BRANCH)
                 .where(condition)
                 .orderBy(Tables.BRANCH.ID)
                 .limit(pageSize)
-                .offset(pageNumber*pageSize)
-                .fetchInto(Branch.class);
+                .offset(pageNumber * pageSize)
+                .fetchInto(BranchDto.class);
     }
 
     public Boolean delete(Integer id) {
         return dsl.deleteFrom(Tables.BRANCH)
                 .where(Tables.BRANCH.ID.eq(id))
                 .execute() == 1;
+    }
+
+    public Integer getTotalItems(Condition condition) {
+        return dsl.selectCount()
+                .from(Tables.BRANCH)
+                .where(condition)
+                .fetchOneInto(Integer.class);
     }
 }
