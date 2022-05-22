@@ -1,5 +1,6 @@
 package com.example.otrtesttask.service;
 
+import com.example.otrtesttask.dto.EmployeeDto;
 import com.example.otrtesttask.dto.PositionDto;
 import com.example.otrtesttask.dto.PositionResponseDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
@@ -61,7 +62,7 @@ public class PositionService {
 
     public Boolean delete(Integer id) throws CustomApiException {
 
-        List<Employee> employees = employeeRepository.findEmployeesByPositionId(id);
+        List<EmployeeDto> employees = employeeRepository.findEmployeesByPositionId(id);
         // Эта должность назначена какому-то сотруднику
         if (!employees.isEmpty())
             throw new CustomApiException(String.format("Some employees are attached to position with id %d", id), HttpStatus.BAD_REQUEST);

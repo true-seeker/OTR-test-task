@@ -1,14 +1,13 @@
 package com.example.otrtesttask.controller;
 
 import com.example.otrtesttask.dto.EmployeeDto;
+import com.example.otrtesttask.dto.EmployeeResponseDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/employees")
@@ -18,17 +17,19 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/")
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) throws CustomApiException {
+    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody Employee employee) throws CustomApiException {
         //Добавление сотрудника
-        Employee e = employeeService.create(employee);
+        EmployeeDto e = employeeService.create(employee);
         return ResponseEntity.ok(e);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<EmployeeDto>> getEmployees(@RequestParam(required = false) Integer managerId,
-                                                          @RequestParam(required = false) String fullName,
-                                                          @RequestParam(required = false) Integer positionId,
-                                                          @RequestParam(required = false) Integer branchId) {
+    public ResponseEntity<EmployeeResponseDto> getEmployees(@RequestParam(required = false) Integer managerId,
+                                                            @RequestParam(required = false) String fullName,
+                                                            @RequestParam(required = false) Integer positionId,
+                                                            @RequestParam(required = false) Integer branchId,
+                                                            @RequestParam(required = false, defaultValue = "50") Integer pageSize,
+                                                            @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
 //        Получение списка всех работников
 //        Возможен фильтр по полям:, managerId, fullName, positionId, branchId
         EmployeeDto employeeDto = new EmployeeDto();
@@ -37,22 +38,22 @@ public class EmployeeController {
         employeeDto.setManagerId(managerId);
         employeeDto.setPositionId(positionId);
 
-        List<EmployeeDto> employeeList = employeeService.getEmployees(employeeDto);
-        return ResponseEntity.ok(employeeList);
+        EmployeeResponseDto employeeResponseDto = employeeService.getEmployees(employeeDto, pageSize, pageNumber);
+        return ResponseEntity.ok(employeeResponseDto);
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<Employee> getEmployee(@PathVariable(value = "employeeId") Integer id) throws CustomApiException {
+    public ResponseEntity<EmployeeDto> getEmployee(@PathVariable(value = "employeeId") Integer id) throws CustomApiException {
 //        Получение сотрудника по его идентификатору
-        Employee e = employeeService.getEmployee(id);
+        EmployeeDto e = employeeService.getEmployee(id);
         return ResponseEntity.ok(e);
     }
 
     @PutMapping("/{employeeId}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable(value = "employeeId") Integer id,
-                                                   @RequestBody Employee employee) throws CustomApiException {
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable(value = "employeeId") Integer id,
+                                                      @RequestBody Employee employee) throws CustomApiException {
 //        Обновление информации о сотруднике
-        Employee e = employeeService.update(id, employee);
+        EmployeeDto e = employeeService.update(id, employee);
         return ResponseEntity.ok(e);
     }
 

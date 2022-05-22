@@ -109,4 +109,12 @@ public class MappingUtils {
         taskResponseDto.setTotalItems(totalItems);
         return taskResponseDto;
     }
+
+    public EmployeeResponseDto mapToEmployeeResponseDto(List<EmployeeDto> employeeDtoList, Integer currentPage, Integer totalItems) {
+        EmployeeResponseDto employeeResponseDto = new EmployeeResponseDto();
+        employeeResponseDto.setEmployeeDtoList(employeeDtoList);
+        employeeResponseDto.setCurrentPage(currentPage);
+        employeeResponseDto.setTotalItems(totalItems);
+        return employeeResponseDto;
+    }
 }
