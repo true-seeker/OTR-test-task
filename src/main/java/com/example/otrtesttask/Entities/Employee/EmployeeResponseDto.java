@@ -1,4 +1,4 @@
-package com.example.otrtesttask.dto;
+package com.example.otrtesttask.Entities.Employee;
 
 import lombok.Data;
 

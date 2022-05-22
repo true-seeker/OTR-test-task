@@ -1,14 +1,10 @@
-package com.example.otrtesttask.service;
+package com.example.otrtesttask.Entities.Branch;
 
-import com.example.otrtesttask.dto.BranchDto;
-import com.example.otrtesttask.dto.BranchResponseDto;
-import com.example.otrtesttask.dto.EmployeeDto;
-import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.Entities.Employee.EmployeeDto;
+import com.example.otrtesttask.Entities.Employee.EmployeeRepository;
+import com.example.otrtesttask.Exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Branch;
-import com.example.otrtesttask.repository.BranchRepository;
-import com.example.otrtesttask.repository.EmployeeRepository;
-import com.example.otrtesttask.utils.MappingUtils;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,13 +16,12 @@ import static org.jooq.impl.DSL.trueCondition;
 
 @Service
 public class BranchService {
+    private final BranchMapper branchMapper = new BranchMapper();
+    private final Integer defaultPageSize = 50;
     @Autowired
     private BranchRepository branchRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
-    private final MappingUtils mappingUtils = new MappingUtils();
-    private final Integer defaultPageSize = 50;
-
 
     public BranchDto create(Branch branch) throws CustomApiException {
 
@@ -68,7 +63,7 @@ public class BranchService {
             condition = condition.and(Tables.BRANCH.TITLE.containsIgnoreCase(branchDto.getTitle()));
         }
 
-        return mappingUtils.mapToBranchResponseDto(
+        return branchMapper.mapToBranchResponseDto(
                 branchRepository.findAll(condition, pageSize, pageNumber),
                 pageNumber,
                 branchRepository.getTotalItems(condition));

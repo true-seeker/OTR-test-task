@@ -1,9 +1,7 @@
-package com.example.otrtesttask.repository;
+package com.example.otrtesttask.Entities.Employee;
 
-import com.example.otrtesttask.dto.EmployeeDto;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
-import com.example.otrtesttask.utils.MappingUtils;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -19,7 +17,7 @@ import java.util.stream.Collectors;
 public class EmployeeRepository {
     @Autowired
     private final DSLContext dsl;
-    private final MappingUtils mappingUtils;
+    private final EmployeeMapper employeeMapper;
 
     public EmployeeDto insert(Employee employee) {
         return dsl.insertInto(Tables.EMPLOYEE)
@@ -49,7 +47,7 @@ public class EmployeeRepository {
                 .limit(pageSize)
                 .offset(pageNumber * pageSize)
                 .fetchInto(Employee.class)
-                .stream().map(mappingUtils::mapToEmployeeDto)
+                .stream().map(employeeMapper::mapToEmployeeDto)
                 .collect(Collectors.toList());
     }
 

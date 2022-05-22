@@ -1,15 +1,10 @@
-package com.example.otrtesttask.controller;
+package com.example.otrtesttask.Entities.Position;
 
-import com.example.otrtesttask.dto.PositionDto;
-import com.example.otrtesttask.dto.PositionResponseDto;
-import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.Exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.tables.pojos.Position;
-import com.example.otrtesttask.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/positions")

@@ -1,16 +1,12 @@
-package com.example.otrtesttask.service;
+package com.example.otrtesttask.Entities.Employee;
 
-import com.example.otrtesttask.dto.EmployeeDto;
-import com.example.otrtesttask.dto.EmployeeResponseDto;
-import com.example.otrtesttask.dto.TaskDto;
-import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.Entities.Task.TaskDto;
+import com.example.otrtesttask.Exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
-import com.example.otrtesttask.repository.BranchRepository;
-import com.example.otrtesttask.repository.EmployeeRepository;
-import com.example.otrtesttask.repository.PositionRepository;
-import com.example.otrtesttask.repository.TaskRepository;
-import com.example.otrtesttask.utils.MappingUtils;
+import com.example.otrtesttask.Entities.Branch.BranchRepository;
+import com.example.otrtesttask.Entities.Position.PositionRepository;
+import com.example.otrtesttask.Entities.Task.TaskRepository;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +30,7 @@ public class EmployeeService {
 
     @Autowired
     private PositionRepository positionRepository;
-    private final MappingUtils mappingUtils = new MappingUtils();
+    private final EmployeeMapper employeeMapper = new EmployeeMapper();
     private final Integer defaultPageSize = 50;
 
     public EmployeeDto create(Employee employee) throws CustomApiException {
@@ -80,7 +76,7 @@ public class EmployeeService {
         if (employeeDto.getBranchId() != null)
             condition = condition.and(Tables.EMPLOYEE.BRANCH_ID.eq(employeeDto.getBranchId()));
 
-        return mappingUtils.mapToEmployeeResponseDto(employeeRepository.findAll(condition, pageSize, pageNumber),
+        return employeeMapper.mapToEmployeeResponseDto(employeeRepository.findAll(condition, pageSize, pageNumber),
                 pageNumber,
                 employeeRepository.getTotalItems(condition));
     }

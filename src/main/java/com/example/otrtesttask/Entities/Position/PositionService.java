@@ -1,15 +1,10 @@
-package com.example.otrtesttask.service;
+package com.example.otrtesttask.Entities.Position;
 
-import com.example.otrtesttask.dto.EmployeeDto;
-import com.example.otrtesttask.dto.PositionDto;
-import com.example.otrtesttask.dto.PositionResponseDto;
-import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.Entities.Employee.EmployeeDto;
+import com.example.otrtesttask.Entities.Employee.EmployeeRepository;
+import com.example.otrtesttask.Exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
-import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.jooq.tables.pojos.Position;
-import com.example.otrtesttask.repository.EmployeeRepository;
-import com.example.otrtesttask.repository.PositionRepository;
-import com.example.otrtesttask.utils.MappingUtils;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,12 +16,12 @@ import static org.jooq.impl.DSL.trueCondition;
 
 @Service
 public class PositionService {
+    private final PositionMapper positionMapper = new PositionMapper();
+    private final Integer defaultPageSize = 50;
     @Autowired
     private PositionRepository positionRepository;
-    private final MappingUtils mappingUtils = new MappingUtils();
     @Autowired
     private EmployeeRepository employeeRepository;
-    private final Integer defaultPageSize = 50;
 
     public PositionDto create(Position position) throws CustomApiException {
         // Если передали id, то возвращаем ошибку
@@ -42,12 +37,12 @@ public class PositionService {
     public PositionResponseDto getPositions(PositionDto positionDto, Integer pageSize, Integer pageNumber) {
         if (pageSize > defaultPageSize)
             pageSize = defaultPageSize;
-        
+
         Condition condition = trueCondition();
         if (positionDto.getTitle() != null)
             condition = condition.and(Tables.POSITION.TITLE.containsIgnoreCase(positionDto.getTitle()));
 
-        return mappingUtils.mapToPositionResponseDto(positionRepository.findAll(condition, pageSize, pageNumber),
+        return positionMapper.mapToPositionResponseDto(positionRepository.findAll(condition, pageSize, pageNumber),
                 pageNumber,
                 positionRepository.getTotalItems(condition));
     }

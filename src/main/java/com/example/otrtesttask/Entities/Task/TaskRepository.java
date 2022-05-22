@@ -1,9 +1,7 @@
-package com.example.otrtesttask.repository;
+package com.example.otrtesttask.Entities.Task;
 
-import com.example.otrtesttask.dto.TaskDto;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
-import com.example.otrtesttask.utils.MappingUtils;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -18,7 +16,7 @@ import java.util.stream.Collectors;
 public class TaskRepository {
     @Autowired
     private final DSLContext dsl;
-    private final MappingUtils mappingUtils;
+    private final TaskMapper taskMapper;
 
     public TaskDto insert(Task task) {
         return dsl.insertInto(Tables.TASK)
@@ -48,7 +46,7 @@ public class TaskRepository {
                 .limit(pageSize)
                 .offset(pageNumber * pageSize)
                 .fetchInto(Task.class)
-                .stream().map(mappingUtils::mapToTaskDto)
+                .stream().map(taskMapper::mapToTaskDto)
                 .collect(Collectors.toList());
     }
 
@@ -63,6 +61,7 @@ public class TaskRepository {
                 .where(Tables.TASK.EMPLOYEE_ID.eq(id))
                 .fetchInto(TaskDto.class);
     }
+
     public Integer getTotalItems(Condition condition) {
         return dsl.selectCount()
                 .from(Tables.TASK)

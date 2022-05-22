@@ -1,15 +1,10 @@
-package com.example.otrtesttask.controller;
+package com.example.otrtesttask.Entities.Branch;
 
-import com.example.otrtesttask.dto.BranchDto;
-import com.example.otrtesttask.dto.BranchResponseDto;
-import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.Exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.tables.pojos.Branch;
-import com.example.otrtesttask.service.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/branches")

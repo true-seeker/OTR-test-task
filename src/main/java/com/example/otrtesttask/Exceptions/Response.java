@@ -1,4 +1,4 @@
-package com.example.otrtesttask.exceptions;
+package com.example.otrtesttask.Exceptions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

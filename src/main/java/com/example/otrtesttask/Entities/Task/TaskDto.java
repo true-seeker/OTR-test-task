@@ -1,4 +1,4 @@
-package com.example.otrtesttask.dto;
+package com.example.otrtesttask.Entities.Task;
 
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import lombok.Data;

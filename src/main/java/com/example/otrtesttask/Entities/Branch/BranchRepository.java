@@ -1,9 +1,7 @@
-package com.example.otrtesttask.repository;
+package com.example.otrtesttask.Entities.Branch;
 
-import com.example.otrtesttask.dto.BranchDto;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Branch;
-import com.example.otrtesttask.utils.MappingUtils;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;

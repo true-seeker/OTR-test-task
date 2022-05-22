@@ -1,6 +1,5 @@
-package com.example.otrtesttask.repository;
+package com.example.otrtesttask.Entities.Position;
 
-import com.example.otrtesttask.dto.PositionDto;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Position;
 import lombok.RequiredArgsConstructor;
