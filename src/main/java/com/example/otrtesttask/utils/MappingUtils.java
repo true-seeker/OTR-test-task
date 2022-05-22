@@ -100,4 +100,13 @@ public class MappingUtils {
         positionResponseDto.setTotalItems(totalItems);
         return positionResponseDto;
     }
+
+    // List<TaskDto> -> TaskResponseDto
+    public TaskResponseDto mapToTaskResponseDto(List<TaskDto> taskDtoList, Integer currentPage, Integer totalItems) {
+        TaskResponseDto taskResponseDto = new TaskResponseDto();
+        taskResponseDto.setTaskDtoList(taskDtoList);
+        taskResponseDto.setCurrentPage(currentPage);
+        taskResponseDto.setTotalItems(totalItems);
+        return taskResponseDto;
+    }
 }

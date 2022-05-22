@@ -1,12 +1,14 @@
 package com.example.otrtesttask.service;
 
 import com.example.otrtesttask.dto.TaskDto;
+import com.example.otrtesttask.dto.TaskResponseDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
 import com.example.otrtesttask.repository.EmployeeRepository;
 import com.example.otrtesttask.repository.TaskRepository;
+import com.example.otrtesttask.utils.MappingUtils;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +27,11 @@ public class TaskService {
     private EmployeeRepository employeeRepository;
     private final Short minPriority = 1;
     private final Short maxPriority = 10;
+    private final Integer defaultPageSize = 50;
 
-    public Task create(Task task) throws CustomApiException {
+    private final MappingUtils mappingUtils = new MappingUtils();
+
+    public TaskDto create(Task task) throws CustomApiException {
         // Если передали id, то возвращаем ошибку
         if (task.getId() != null)
             throw new CustomApiException("Id field is prohibited", HttpStatus.BAD_REQUEST);
@@ -44,17 +49,16 @@ public class TaskService {
         if (e == null)
             throw new CustomApiException(String.format("Employee with id %d not found", task.getEmployeeId()), HttpStatus.BAD_REQUEST);
 
-
         return taskRepository.insert(task);
     }
 
-    public Task update(Integer id, Task task) throws CustomApiException {
+    public TaskDto update(Integer id, Task task) throws CustomApiException {
         // Исполнителя не существует
         Employee e = employeeRepository.find(task.getEmployeeId());
         if (e == null)
             throw new CustomApiException(String.format("Employee with id %d not found", task.getEmployeeId()), HttpStatus.BAD_REQUEST);
 
-        Task t = taskRepository.update(id, task);
+        TaskDto t = taskRepository.update(id, task);
         // Нет сущности с таким идентификатором
         if (t == null)
             throw new CustomApiException(String.format("Task with id %d not found", id), HttpStatus.NOT_FOUND);
@@ -62,8 +66,8 @@ public class TaskService {
         return t;
     }
 
-    public Task getTask(Integer id) throws CustomApiException {
-        Task t = taskRepository.find(id);
+    public TaskDto getTask(Integer id) throws CustomApiException {
+        TaskDto t = taskRepository.find(id);
         // Нет сущности с таким идентификатором
         if (t == null)
             throw new CustomApiException(String.format("Task with id %d not found", id), HttpStatus.NOT_FOUND);
@@ -71,7 +75,9 @@ public class TaskService {
         return t;
     }
 
-    public List<TaskDto> getTasks(TaskDto taskDto) {
+    public TaskResponseDto getTasks(TaskDto taskDto, Integer pageSize, Integer pageNumber) {
+        if (pageSize > defaultPageSize)
+            pageSize = defaultPageSize;
 
         Condition condition = trueCondition();
 
@@ -82,7 +88,9 @@ public class TaskService {
         if (taskDto.getEmployeeId() != null)
             condition = condition.and(Tables.TASK.EMPLOYEE_ID.eq(taskDto.getEmployeeId()));
 
-        return taskRepository.findAll(condition);
+        return mappingUtils.mapToTaskResponseDto(taskRepository.findAll(condition, pageSize, pageNumber),
+                pageNumber,
+                taskRepository.getTotalItems(condition));
     }
 
     public Boolean delete(Integer id) throws CustomApiException {
@@ -94,17 +102,19 @@ public class TaskService {
         return b;
     }
 
-    public Task setPriority(Integer id, Short newPriority) throws CustomApiException {
+    public TaskDto setPriority(Integer id, Short newPriority) throws CustomApiException {
         // Новое значение приоритета не удовлетворяет условиям
         if (newPriority < minPriority || newPriority > maxPriority)
             throw new CustomApiException(String.format("Priority must be in range [%d;%d]", minPriority, maxPriority), HttpStatus.BAD_REQUEST);
 
-        Task task = taskRepository.find(id);
+        TaskDto taskDto = taskRepository.find(id);
         // Нет сущности с таким идентификатором
-        if (task == null)
+        if (taskDto == null)
             throw new CustomApiException(String.format("Task with id %d not found", id), HttpStatus.NOT_FOUND);
-        task.setPriority(newPriority);
+        taskDto.setPriority(newPriority);
 
-        return taskRepository.update(id, task);
+        return taskRepository.update(id, mappingUtils.mapToTask(taskDto));
     }
+
+
 }

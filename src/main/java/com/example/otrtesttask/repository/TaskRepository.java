@@ -20,31 +20,33 @@ public class TaskRepository {
     private final DSLContext dsl;
     private final MappingUtils mappingUtils;
 
-    public Task insert(Task task) {
+    public TaskDto insert(Task task) {
         return dsl.insertInto(Tables.TASK)
                 .set(dsl.newRecord(Tables.TASK, task))
                 .returning()
-                .fetchOneInto(Task.class);
+                .fetchOneInto(TaskDto.class);
     }
 
-    public Task update(Integer id, Task task) {
+    public TaskDto update(Integer id, Task task) {
         return dsl.update(Tables.TASK)
                 .set(dsl.newRecord(Tables.TASK, task))
                 .where(Tables.TASK.ID.eq(id))
                 .returning()
-                .fetchOneInto(Task.class);
+                .fetchOneInto(TaskDto.class);
     }
 
-    public Task find(Integer id) {
+    public TaskDto find(Integer id) {
         return dsl.selectFrom(Tables.TASK)
                 .where(Tables.TASK.ID.eq(id))
-                .fetchOneInto(Task.class);
+                .fetchOneInto(TaskDto.class);
     }
 
-    public List<TaskDto> findAll(Condition condition) {
+    public List<TaskDto> findAll(Condition condition, Integer pageSize, Integer pageNumber) {
         return dsl.selectFrom(Tables.TASK)
                 .where(condition)
                 .orderBy(Tables.TASK.PRIORITY.desc(), Tables.TASK.ID)
+                .limit(pageSize)
+                .offset(pageNumber * pageSize)
                 .fetchInto(Task.class)
                 .stream().map(mappingUtils::mapToTaskDto)
                 .collect(Collectors.toList());
@@ -56,9 +58,15 @@ public class TaskRepository {
                 .execute() == 1;
     }
 
-    public List<Task> findTasksByEmployeeId(Integer id) {
+    public List<TaskDto> findTasksByEmployeeId(Integer id) {
         return dsl.selectFrom(Tables.TASK)
                 .where(Tables.TASK.EMPLOYEE_ID.eq(id))
-                .fetchInto(Task.class);
+                .fetchInto(TaskDto.class);
+    }
+    public Integer getTotalItems(Condition condition) {
+        return dsl.selectCount()
+                .from(Tables.TASK)
+                .where(condition)
+                .fetchOneInto(Integer.class);
     }
 }

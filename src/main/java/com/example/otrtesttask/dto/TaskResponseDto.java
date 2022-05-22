@@ -1,7 +1,9 @@
 package com.example.otrtesttask.dto;
 
-import java.util.List;
+import lombok.Data;
 
+import java.util.List;
+@Data
 public class TaskResponseDto {
     private Integer totalItems;
     private Integer currentPage;
