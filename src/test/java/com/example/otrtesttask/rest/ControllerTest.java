@@ -1,6 +1,7 @@
 package com.example.otrtesttask.rest;
 
 import com.example.otrtesttask.controller.EmployeeController;
+import com.example.otrtesttask.dto.EmployeeDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import org.hamcrest.MatcherAssert;
@@ -21,7 +22,7 @@ public class ControllerTest {
     @Test
     public void getEmployee() throws CustomApiException {
         Integer id = 1;
-        ResponseEntity<Employee> responseEntity = employeeController.getEmployee(id);
+        ResponseEntity<EmployeeDto> responseEntity = employeeController.getEmployee(id);
         MatcherAssert.assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
     }
 
@@ -34,7 +35,7 @@ public class ControllerTest {
         newEmployee.setBranchId(1);
         newEmployee.setPositionId(1);
 
-        ResponseEntity<Employee> responseEntity = employeeController.createEmployee(newEmployee);
+        ResponseEntity<EmployeeDto> responseEntity = employeeController.createEmployee(newEmployee);
 
         MatcherAssert.assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
     }
@@ -48,9 +49,9 @@ public class ControllerTest {
         newEmployee.setBranchId(1);
         newEmployee.setPositionId(1);
 
-        newEmployee = employeeController.createEmployee(newEmployee).getBody();
+        EmployeeDto employeeDto = employeeController.createEmployee(newEmployee).getBody();
 
-        ResponseEntity<Employee> responseEntity = employeeController.updateEmployee(newEmployee.getId(), newEmployee);
+        ResponseEntity<EmployeeDto> responseEntity = employeeController.updateEmployee(employeeDto.getId(), newEmployee);
 
         MatcherAssert.assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
     }
@@ -64,9 +65,9 @@ public class ControllerTest {
         newEmployee.setBranchId(1);
         newEmployee.setPositionId(1);
 
-        newEmployee = employeeController.createEmployee(newEmployee).getBody();
+        EmployeeDto employeeDto = employeeController.createEmployee(newEmployee).getBody();
 
-        ResponseEntity<Object> responseEntity = employeeController.deleteEmployee(newEmployee.getId());
+        ResponseEntity<Object> responseEntity = employeeController.deleteEmployee(employeeDto.getId());
 
         MatcherAssert.assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
     }

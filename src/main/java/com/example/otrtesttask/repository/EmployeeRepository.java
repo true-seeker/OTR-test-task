@@ -21,31 +21,33 @@ public class EmployeeRepository {
     private final DSLContext dsl;
     private final MappingUtils mappingUtils;
 
-    public Employee insert(Employee employee) {
+    public EmployeeDto insert(Employee employee) {
         return dsl.insertInto(Tables.EMPLOYEE)
                 .set(dsl.newRecord(Tables.EMPLOYEE, employee))
                 .returning()
-                .fetchOneInto(Employee.class);
+                .fetchOneInto(EmployeeDto.class);
     }
 
-    public Employee update(Integer id, Employee employee) {
+    public EmployeeDto update(Integer id, Employee employee) {
         return dsl.update(Tables.EMPLOYEE)
                 .set(dsl.newRecord(Tables.EMPLOYEE, employee))
                 .where(Tables.EMPLOYEE.ID.eq(id))
                 .returning()
-                .fetchOneInto(Employee.class);
+                .fetchOneInto(EmployeeDto.class);
     }
 
-    public Employee find(Integer id) {
+    public EmployeeDto find(Integer id) {
         return dsl.selectFrom(Tables.EMPLOYEE)
                 .where(Tables.EMPLOYEE.ID.eq(id))
-                .fetchOneInto(Employee.class);
+                .fetchOneInto(EmployeeDto.class);
     }
 
-    public List<EmployeeDto> findAll(Condition condition) {
+    public List<EmployeeDto> findAll(Condition condition, Integer pageSize, Integer pageNumber) {
         return dsl.selectFrom(Tables.EMPLOYEE)
                 .where(condition)
                 .orderBy(Tables.EMPLOYEE.ID)
+                .limit(pageSize)
+                .offset(pageNumber * pageSize)
                 .fetchInto(Employee.class)
                 .stream().map(mappingUtils::mapToEmployeeDto)
                 .collect(Collectors.toList());
@@ -57,22 +59,29 @@ public class EmployeeRepository {
                 .execute() == 1;
     }
 
-    public List<Employee> findSubordinatesByManagerId(Integer id) {
+    public List<EmployeeDto> findSubordinatesByManagerId(Integer id) {
         return dsl.selectFrom(Tables.EMPLOYEE)
                 .where(Tables.EMPLOYEE.MANAGER_ID.eq(id))
-                .fetchInto(Employee.class);
+                .fetchInto(EmployeeDto.class);
     }
 
-    public List<Employee> findEmployeesByBranchId(Integer id) {
+    public List<EmployeeDto> findEmployeesByBranchId(Integer id) {
         return dsl.selectFrom(Tables.EMPLOYEE)
                 .where(Tables.EMPLOYEE.BRANCH_ID.eq(id))
-                .fetchInto(Employee.class);
+                .fetchInto(EmployeeDto.class);
     }
 
-    public List<Employee> findEmployeesByPositionId(Integer id) {
+    public List<EmployeeDto> findEmployeesByPositionId(Integer id) {
         return dsl.selectFrom(Tables.EMPLOYEE)
                 .where(Tables.EMPLOYEE.POSITION_ID.eq(id))
-                .fetchInto(Employee.class);
+                .fetchInto(EmployeeDto.class);
+    }
+
+    public Integer getTotalItems(Condition condition) {
+        return dsl.selectCount()
+                .from(Tables.EMPLOYEE)
+                .where(condition)
+                .fetchOneInto(Integer.class);
     }
 
 }

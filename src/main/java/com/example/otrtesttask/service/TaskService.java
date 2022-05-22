@@ -1,10 +1,10 @@
 package com.example.otrtesttask.service;
 
+import com.example.otrtesttask.dto.EmployeeDto;
 import com.example.otrtesttask.dto.TaskDto;
 import com.example.otrtesttask.dto.TaskResponseDto;
 import com.example.otrtesttask.exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
-import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
 import com.example.otrtesttask.repository.EmployeeRepository;
 import com.example.otrtesttask.repository.TaskRepository;
@@ -13,8 +13,6 @@ import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static org.jooq.impl.DSL.trueCondition;
 
@@ -45,7 +43,7 @@ public class TaskService {
         if (task.getPriority() == null)
             throw new CustomApiException("Missing required field: priority", HttpStatus.BAD_REQUEST);
         // Исполнителя не существует
-        Employee e = employeeRepository.find(task.getEmployeeId());
+        EmployeeDto e = employeeRepository.find(task.getEmployeeId());
         if (e == null)
             throw new CustomApiException(String.format("Employee with id %d not found", task.getEmployeeId()), HttpStatus.BAD_REQUEST);
 
@@ -54,7 +52,7 @@ public class TaskService {
 
     public TaskDto update(Integer id, Task task) throws CustomApiException {
         // Исполнителя не существует
-        Employee e = employeeRepository.find(task.getEmployeeId());
+        EmployeeDto e = employeeRepository.find(task.getEmployeeId());
         if (e == null)
             throw new CustomApiException(String.format("Employee with id %d not found", task.getEmployeeId()), HttpStatus.BAD_REQUEST);
 
