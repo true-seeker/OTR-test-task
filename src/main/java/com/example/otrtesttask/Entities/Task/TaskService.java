@@ -1,14 +1,10 @@
-package com.example.otrtesttask.service;
+package com.example.otrtesttask.Entities.Task;
 
-import com.example.otrtesttask.dto.EmployeeDto;
-import com.example.otrtesttask.dto.TaskDto;
-import com.example.otrtesttask.dto.TaskResponseDto;
-import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.Entities.Employee.EmployeeDto;
+import com.example.otrtesttask.Entities.Employee.EmployeeRepository;
+import com.example.otrtesttask.Exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Task;
-import com.example.otrtesttask.repository.EmployeeRepository;
-import com.example.otrtesttask.repository.TaskRepository;
-import com.example.otrtesttask.utils.MappingUtils;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,16 +14,14 @@ import static org.jooq.impl.DSL.trueCondition;
 
 @Service
 public class TaskService {
-    @Autowired
-    private TaskRepository taskRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
     private final Short minPriority = 1;
     private final Short maxPriority = 10;
     private final Integer defaultPageSize = 50;
-
-    private final MappingUtils mappingUtils = new MappingUtils();
+    private final TaskMapper taskMapper = new TaskMapper();
+    @Autowired
+    private TaskRepository taskRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     public TaskDto create(Task task) throws CustomApiException {
         // Если передали id, то возвращаем ошибку
@@ -86,7 +80,7 @@ public class TaskService {
         if (taskDto.getEmployeeId() != null)
             condition = condition.and(Tables.TASK.EMPLOYEE_ID.eq(taskDto.getEmployeeId()));
 
-        return mappingUtils.mapToTaskResponseDto(taskRepository.findAll(condition, pageSize, pageNumber),
+        return taskMapper.mapToTaskResponseDto(taskRepository.findAll(condition, pageSize, pageNumber),
                 pageNumber,
                 taskRepository.getTotalItems(condition));
     }
@@ -111,7 +105,7 @@ public class TaskService {
             throw new CustomApiException(String.format("Task with id %d not found", id), HttpStatus.NOT_FOUND);
         taskDto.setPriority(newPriority);
 
-        return taskRepository.update(id, mappingUtils.mapToTask(taskDto));
+        return taskRepository.update(id, taskMapper.mapToTask(taskDto));
     }
 
 

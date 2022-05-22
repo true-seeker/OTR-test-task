@@ -1,8 +1,9 @@
-package com.example.otrtesttask.dto;
+package com.example.otrtesttask.Entities.Task;
 
 import lombok.Data;
 
 import java.util.List;
+
 @Data
 public class TaskResponseDto {
     private Integer totalItems;

@@ -1,4 +1,4 @@
-package com.example.otrtesttask.exceptions;
+package com.example.otrtesttask.Exceptions;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

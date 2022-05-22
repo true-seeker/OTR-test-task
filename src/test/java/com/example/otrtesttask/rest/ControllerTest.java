@@ -1,8 +1,8 @@
 package com.example.otrtesttask.rest;
 
-import com.example.otrtesttask.controller.EmployeeController;
-import com.example.otrtesttask.dto.EmployeeDto;
-import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.Entities.Employee.EmployeeController;
+import com.example.otrtesttask.Entities.Employee.EmployeeDto;
+import com.example.otrtesttask.Exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;

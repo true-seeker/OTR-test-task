@@ -1,4 +1,4 @@
-package com.example.otrtesttask.exceptions;
+package com.example.otrtesttask.Exceptions;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;

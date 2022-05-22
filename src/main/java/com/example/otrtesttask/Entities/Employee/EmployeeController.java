@@ -1,10 +1,7 @@
-package com.example.otrtesttask.controller;
+package com.example.otrtesttask.Entities.Employee;
 
-import com.example.otrtesttask.dto.EmployeeDto;
-import com.example.otrtesttask.dto.EmployeeResponseDto;
-import com.example.otrtesttask.exceptions.CustomApiException;
+import com.example.otrtesttask.Exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
-import com.example.otrtesttask.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

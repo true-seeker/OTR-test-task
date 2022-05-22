@@ -1,9 +1,9 @@
-package com.example.otrtesttask.dto;
+package com.example.otrtesttask.Entities.Position;
 
 import lombok.Data;
 
 @Data
-public class BranchDto {
+public class PositionDto {
     private Integer id;
     private String title;
 }

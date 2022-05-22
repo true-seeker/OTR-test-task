@@ -1,4 +1,4 @@
-package com.example.otrtesttask.dto;
+package com.example.otrtesttask.Entities.Employee;
 
 import com.example.otrtesttask.jooq.tables.pojos.Branch;
 import com.example.otrtesttask.jooq.tables.pojos.Position;
