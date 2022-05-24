@@ -1,12 +1,12 @@
 package com.example.otrtesttask.Entities.Employee;
 
+import com.example.otrtesttask.Entities.Branch.BranchRepository;
+import com.example.otrtesttask.Entities.Position.PositionRepository;
 import com.example.otrtesttask.Entities.Task.TaskDto;
+import com.example.otrtesttask.Entities.Task.TaskRepository;
 import com.example.otrtesttask.Exceptions.CustomApiException;
 import com.example.otrtesttask.jooq.Tables;
 import com.example.otrtesttask.jooq.tables.pojos.Employee;
-import com.example.otrtesttask.Entities.Branch.BranchRepository;
-import com.example.otrtesttask.Entities.Position.PositionRepository;
-import com.example.otrtesttask.Entities.Task.TaskRepository;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,8 @@ public class EmployeeService {
 
     @Autowired
     private PositionRepository positionRepository;
-    private final EmployeeMapper employeeMapper = new EmployeeMapper();
+    @Autowired
+    private  EmployeeMapper employeeMapper;
     private final Integer defaultPageSize = 50;
 
     public EmployeeDto create(Employee employee) throws CustomApiException {
@@ -125,7 +126,7 @@ public class EmployeeService {
         if (Objects.equals(employee.getFullName(), ""))
             throw new CustomApiException("Full name can't be empty", HttpStatus.BAD_REQUEST);
         //Провекра ом кого-либо не может быть его подчиненный
-        checkChainOfCommand(id, employee.getManagerId());
+        checkChainOfCommand(id, employeeMapper.mapToEmployeeDto(employee));
         EmployeeDto e = employeeRepository.update(id, employee);
 
         // Нет сущности с таким идентификатором
@@ -134,12 +135,14 @@ public class EmployeeService {
         return e;
     }
 
-    private void checkChainOfCommand(Integer employeeId, Integer managerId) throws CustomApiException {
-        List<EmployeeDto> subordinates = employeeRepository.findSubordinatesByManagerId(employeeId);
-        for (EmployeeDto subordinate : subordinates) {
-            if (Objects.equals(subordinate.getId(), managerId))
-                throw new CustomApiException(String.format("Employee with id %d can't be manager because chain of command is broken", managerId), HttpStatus.BAD_REQUEST);
-            checkChainOfCommand(subordinate.getId(), managerId);
-        }
+    private void checkChainOfCommand(Integer employeeId, EmployeeDto newEmployee) throws CustomApiException {
+        Employee manager = newEmployee.getManager();
+        if (manager == null)
+            return;
+
+        if (Objects.equals(manager.getId(), employeeId))
+            throw new CustomApiException("Employee can't be manager because chain of command is broken", HttpStatus.BAD_REQUEST);
+
+        checkChainOfCommand(employeeId, employeeMapper.mapToEmployeeDto(manager));
     }
 }
